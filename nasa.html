@@ -1,0 +1,2586 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>
+      NASA | Journey Through the Cosmos
+    </title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries">
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&amp;family=Share+Tech+Mono&amp;family=Orbitron:wght@400;600;700;900&amp;display=swap" rel="stylesheet" />
+    <script id="tailwind-config">
+      tailwind.config = {
+  darkMode: &#34;class&#34;,
+  theme: {
+    extend: {
+      colors: {
+        &#34;primary&#34;: &#34;#72f5ff&#34;,
+        &#34;primary-container&#34;: &#34;#00dbe7&#34;,
+        &#34;on-primary&#34;: &#34;#00363a&#34;,
+        &#34;surface&#34;: &#34;#06060C&#34;,
+        &#34;surface-container-high&#34;: &#34;#0c0c1a&#34;,
+        &#34;on-surface&#34;: &#34;#e2e2e2&#34;,
+        &#34;on-surface-variant&#34;: &#34;#bac9cb&#34;,
+        &#34;background&#34;: &#34;#06060C&#34;,
+        &#34;on-background&#34;: &#34;#e2e2e2&#34;,
+        &#34;outline-variant&#34;: &#34;#3b494a&#34;,
+        &#34;outline&#34;: &#34;#849495&#34;
+      },
+      fontFamily: {
+        &#34;display&#34;: [&#34;Orbitron&#34;],
+        &#34;mono&#34;: [&#34;Share Tech Mono&#34;],
+        &#34;body&#34;: [&#34;Rajdhani&#34;]
+      }
+    }
+  }
+}
+    </script>
+    <style>
+      /* ─────────────────────────────────── RESET &amp; BASE ─── */
+*, *::before, *::after { box-sizing: border-box; }
+html { cursor: none; scroll-behavior: smooth; }
+body {
+  font-family: &#39;Rajdhani&#39;, sans-serif;
+  background-color: #06060C;
+  color: #e2e2e2;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+a, button, [data-hover] { cursor: none; }
+
+/* ─────────────────────────────────── CSS VARIABLES ─── */
+:root {
+  --cyan: #72f5ff;
+  --cyan-dim: rgba(114,245,255,0.15);
+  --cyan-glow: rgba(114,245,255,0.4);
+  --red-alert: #ff3b3b;
+  --green-ok: #4ADE80;
+  --bg: #06060C;
+  --bg-card: #0c0c1a;
+  --border: rgba(255,255,255,0.08);
+  --border-cyan: rgba(114,245,255,0.3);
+}
+
+/* ─────────────────────────────────── CUSTOM CURSOR ─── */
+#cursor-crosshair {
+  position: fixed;
+  top: 0; left: 0;
+  pointer-events: none;
+  z-index: 99999;
+  mix-blend-mode: screen;
+  transform: translate(-50%, -50%);
+  transition: transform 0.06s linear;
+}
+
+#cursor-crosshair .h-line,
+#cursor-crosshair .v-line {
+  position: absolute;
+  background: var(--cyan);
+  opacity: 0.85;
+  transition: width 0.2s ease, height 0.2s ease, opacity 0.2s ease;
+}
+#cursor-crosshair .h-line {
+  width: 28px; height: 1px;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+#cursor-crosshair .v-line {
+  width: 1px; height: 28px;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Corner brackets */
+#cursor-crosshair .corner {
+  position: absolute;
+  width: 8px; height: 8px;
+  border-color: var(--cyan);
+  border-style: solid;
+  opacity: 0.9;
+  transition: all 0.2s ease;
+}
+#cursor-crosshair .corner.tl { top: -14px; left: -14px; border-width: 1.5px 0 0 1.5px; }
+#cursor-crosshair .corner.tr { top: -14px; right: -14px; border-width: 1.5px 1.5px 0 0; }
+#cursor-crosshair .corner.bl { bottom: -14px; left: -14px; border-width: 0 0 1.5px 1.5px; }
+#cursor-crosshair .corner.br { bottom: -14px; right: -14px; border-width: 0 1.5px 1.5px 0; }
+
+/* Center dot */
+#cursor-crosshair .center-dot {
+  position: absolute;
+  width: 3px; height: 3px;
+  background: var(--cyan);
+  border-radius: 50%;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 6px var(--cyan);
+}
+
+/* Hover state */
+body.cursor-hover #cursor-crosshair .corner.tl { top: -10px; left: -10px; }
+body.cursor-hover #cursor-crosshair .corner.tr { top: -10px; right: -10px; }
+body.cursor-hover #cursor-crosshair .corner.bl { bottom: -10px; left: -10px; }
+body.cursor-hover #cursor-crosshair .corner.br { bottom: -10px; right: -10px; }
+body.cursor-hover #cursor-crosshair .h-line { width: 20px; }
+body.cursor-hover #cursor-crosshair .v-line { height: 20px; }
+body.cursor-hover #cursor-crosshair .center-dot { box-shadow: 0 0 12px var(--cyan), 0 0 24px var(--cyan-glow); }
+
+/* Cursor trail */
+.cursor-trail {
+  position: fixed;
+  pointer-events: none;
+  z-index: 99998;
+  border-radius: 50%;
+  background: var(--cyan);
+  mix-blend-mode: screen;
+  transition: opacity 0.5s ease;
+}
+
+/* ─────────────────────────────────── SCROLL PROGRESS ─── */
+#scroll-progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #72f5ff, #00dbe7);
+  z-index: 100;
+  width: 0%;
+  transition: width 0.1s linear;
+  box-shadow: 0 0 10px rgba(114,245,255,0.8);
+}
+
+/* ─────────────────────────────────── NAV ─── */
+nav {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: background 0.3s ease, border-color 0.3s ease, padding 0.3s ease;
+}
+nav.scrolled {
+  background: rgba(6,6,12,0.97) !important;
+  border-color: rgba(114,245,255,0.15) !important;
+}
+.nav-logo { font-family: &#39;Orbitron&#39;, sans-serif; }
+
+/* ─────────────────────────────────── CANVAS ─── */
+#particle-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.9;
+}
+
+/* ─────────────────────────────────── GRID OVERLAY ─── */
+.grid-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.025;
+  background-image:
+    linear-gradient(rgba(114,245,255,1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(114,245,255,1) 1px, transparent 1px);
+  background-size: 80px 80px;
+}
+
+/* ─────────────────────────────────── KEYFRAMES ─── */
+@keyframes slow-rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes orbit-spin { from { transform: rotateX(70deg) rotateZ(0deg); } to { transform: rotateX(70deg) rotateZ(360deg); } }
+@keyframes orbit-spin-reverse { from { transform: rotateX(65deg) rotateY(10deg) rotateZ(360deg); } to { transform: rotateX(65deg) rotateY(10deg) rotateZ(0deg); } }
+@keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-18px); } }
+@keyframes pulse-cyan { 0% { box-shadow: 0 0 0 0 rgba(114,245,255,0.7); } 70% { box-shadow: 0 0 0 15px rgba(114,245,255,0); } 100% { box-shadow: 0 0 0 0 rgba(114,245,255,0); } }
+
+@keyframes glitch-1 {
+  0%, 90%, 100% { clip-path: none; transform: translate(0); }
+  91% { clip-path: polygon(0 15%, 100% 15%, 100% 35%, 0 35%); transform: translate(-3px, 2px); }
+  93% { clip-path: polygon(0 60%, 100% 60%, 100% 75%, 0 75%); transform: translate(3px, -1px); }
+  95% { clip-path: polygon(0 5%, 100% 5%, 100% 20%, 0 20%); transform: translate(-2px, 1px); }
+  97% { clip-path: polygon(0 40%, 100% 40%, 100% 55%, 0 55%); transform: translate(2px, 0); }
+}
+@keyframes glitch-2 {
+  0%, 88%, 100% { opacity: 0; }
+  89% { opacity: 0.7; clip-path: polygon(0 20%, 100% 20%, 100% 40%, 0 40%); transform: translate(4px, -2px); color: #ff3b3b; }
+  91% { opacity: 0.5; clip-path: polygon(0 55%, 100% 55%, 100% 70%, 0 70%); transform: translate(-3px, 1px); color: #72f5ff; }
+  93% { opacity: 0; }
+}
+
+@keyframes scanline-move {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+@keyframes data-scroll {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}
+
+@keyframes ping-slow {
+  0% { transform: scale(1); opacity: 0.8; }
+  75%, 100% { transform: scale(2.5); opacity: 0; }
+}
+
+@keyframes radar-sweep {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeslideup {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes reveal-left {
+  from { opacity: 0; transform: translateX(-40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes reveal-right {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes timeline-reveal {
+  from { opacity: 0; transform: translateY(20px) scaleX(0.95); }
+  to { opacity: 1; transform: translateY(0) scaleX(1); }
+}
+
+@keyframes typewriter-blink {
+  0%, 100% { border-color: var(--cyan); }
+  50% { border-color: transparent; }
+}
+
+@keyframes section-line-grow {
+  from { width: 0; }
+  to { width: 60px; }
+}
+
+/* ─────────────────────────────────── HERO ANIMATIONS ─── */
+.hero-animate { animation: fadeslideup 0.7s ease both; }
+.d1 { animation-delay: 0.05s; } .d2 { animation-delay: 0.2s; }
+.d3 { animation-delay: 0.38s; } .d4 { animation-delay: 0.55s; }
+.d5 { animation-delay: 0.72s; } .d6 { animation-delay: 0.9s; }
+
+/* ─────────────────────────────────── GLITCH TITLE ─── */
+.glitch-wrapper { position: relative; display: inline-block; }
+.glitch-main {
+  animation: glitch-1 8s infinite;
+  background: linear-gradient(120deg,#ffffff 0%,#e4f8ff 45%,#72f5ff 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  filter: drop-shadow(0 0 35px rgba(114,245,255,0.25));
+}
+.glitch-overlay {
+  position: absolute; top: 0; left: 0; width: 100%;
+  background: linear-gradient(120deg,#ff3b3b 0%,#72f5ff 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  animation: glitch-2 8s infinite;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ─────────────────────────────────── SCROLL REVEAL ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.from-left { transform: translateX(-40px); }
+.reveal.from-right { transform: translateX(40px); }
+.reveal.scale-up { transform: scale(0.93); }
+.reveal.visible {
+  opacity: 1;
+  transform: translate(0) scale(1);
+}
+
+.stagger-children &gt; * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.stagger-children.visible &gt; * { opacity: 1; transform: translateY(0); }
+.stagger-children.visible &gt; *:nth-child(1) { transition-delay: 0s; }
+.stagger-children.visible &gt; *:nth-child(2) { transition-delay: 0.1s; }
+.stagger-children.visible &gt; *:nth-child(3) { transition-delay: 0.2s; }
+.stagger-children.visible &gt; *:nth-child(4) { transition-delay: 0.3s; }
+.stagger-children.visible &gt; *:nth-child(5) { transition-delay: 0.4s; }
+.stagger-children.visible &gt; *:nth-child(6) { transition-delay: 0.5s; }
+.stagger-children.visible &gt; *:nth-child(7) { transition-delay: 0.6s; }
+.stagger-children.visible &gt; *:nth-child(8) { transition-delay: 0.7s; }
+
+/* ─────────────────────────────────── SECTION HEADING ─── */
+.section-heading {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.section-heading::before {
+  content: &#39;&#39;;
+  display: block;
+  height: 2px;
+  width: 0;
+  background: linear-gradient(90deg, var(--cyan), transparent);
+  transition: width 0.8s ease 0.2s;
+  box-shadow: 0 0 10px var(--cyan-glow);
+}
+.section-heading.visible::before { width: 60px; }
+.section-label {
+  font-family: &#39;Share Tech Mono&#39;, monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: var(--cyan);
+  opacity: 0.7;
+  text-transform: uppercase;
+}
+
+/* ─────────────────────────────────── PLANET CARDS ─── */
+.planet-card {
+  background: rgba(12,12,26,0.5);
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.1s ease;
+  transform-style: preserve-3d;
+  transform-origin: center center;
+}
+.planet-card:hover {
+  border-color: rgba(114,245,255,0.35);
+  box-shadow: 0 0 30px rgba(114,245,255,0.08), inset 0 0 30px rgba(114,245,255,0.03);
+}
+.planet-card .planet-img {
+  width: 100px; height: 100px;
+  border-radius: 50%; object-fit: cover;
+  animation: slow-rotate 20s linear infinite;
+  transition: filter 0.3s ease, animation-duration 0.3s ease;
+}
+.planet-card:hover .planet-img { animation-duration: 5s; }
+
+/* Planet glow classes */
+.mercury-glow { filter: drop-shadow(0 0 12px rgba(156,163,175,0.5)); }
+.venus-glow { filter: drop-shadow(0 0 12px rgba(194,65,12,0.5)); }
+.earth-glow { filter: drop-shadow(0 0 12px rgba(37,99,235,0.6)); }
+.mars-glow { filter: drop-shadow(0 0 12px rgba(153,27,27,0.5)); }
+.jupiter-glow { filter: drop-shadow(0 0 12px rgba(146,64,14,0.5)); }
+.saturn-glow { filter: drop-shadow(0 0 12px rgba(202,138,4,0.5)); }
+.uranus-glow { filter: drop-shadow(0 0 12px rgba(103,232,249,0.5)); }
+.neptune-glow { filter: drop-shadow(0 0 12px rgba(30,64,175,0.5)); }
+
+/* Data readout inside cards */
+.planet-data-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-family: &#39;Share Tech Mono&#39;, monospace;
+  font-size: 0.72rem;
+}
+.planet-data-row .label { color: rgba(186,201,203,0.6); }
+.planet-data-row .value { color: var(--cyan); }
+
+/* ─────────────────────────────────── MAGNETIC BUTTONS ─── */
+.btn-primary {
+  background: var(--cyan);
+  color: #00363a;
+  padding: 16px 32px;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  display: inline-flex; align-items: center; gap: 10px;
+  transition: filter 0.2s ease, box-shadow 0.3s ease;
+  box-shadow: 0 0 24px rgba(114,245,255,0.25);
+  animation: pulse-cyan 3s infinite;
+  position: relative;
+  overflow: hidden;
+  font-family: &#39;Orbitron&#39;, sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+}
+.btn-primary::after {
+  content: &#39;&#39;;
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.btn-primary:hover::after { opacity: 1; }
+.btn-primary:hover { filter: brightness(1.1); }
+
+.btn-secondary {
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(8px);
+  color: var(--cyan);
+  padding: 16px 32px;
+  border-radius: 4px;
+  font-weight: 700;
+  border: 1px solid rgba(114,245,255,0.4);
+  display: inline-flex; align-items: center; gap: 10px;
+  transition: all 0.25s ease;
+  font-family: &#39;Orbitron&#39;, sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  position: relative;
+  overflow: hidden;
+}
+.btn-secondary::before {
+  content: &#39;&#39;;
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(114,245,255,0.08), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.5s ease;
+}
+.btn-secondary:hover::before { transform: translateX(100%); }
+.btn-secondary:hover { border-color: var(--cyan); background: rgba(114,245,255,0.08); }
+
+/* ─────────────────────────────────── SCANLINE MOVING ─── */
+.hero-scanline {
+  position: absolute;
+  width: 100%; height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(114,245,255,0.06), transparent);
+  pointer-events: none;
+  z-index: 5;
+  animation: scanline-move 6s linear infinite;
+}
+
+/* ─────────────────────────────────── EARTH ─── */
+.earth-container { animation: float 6s ease-in-out infinite; }
+.earth-atmosphere {
+  box-shadow: 0 0 80px 25px rgba(114,245,255,0.4), inset 0 0 50px rgba(114,245,255,0.6);
+}
+.orbit-ring-1 {
+  border-radius: 50%; border: 1px solid rgba(114,245,255,0.2);
+  position: absolute; top: 50%; left: 50%;
+  width: 140%; height: 140%; margin-top: -70%; margin-left: -70%;
+  animation: orbit-spin 20s linear infinite;
+}
+.orbit-ring-2 {
+  border-radius: 50%; border: 0.5px solid rgba(114,245,255,0.08);
+  position: absolute; top: 50%; left: 50%;
+  width: 185%; height: 185%; margin-top: -92.5%; margin-left: -92.5%;
+  animation: orbit-spin-reverse 60s linear infinite;
+}
+.satellite {
+  position: absolute; width: 4px; height: 4px;
+  background: var(--cyan); border-radius: 50%;
+  box-shadow: 0 0 8px var(--cyan);
+}
+
+/* ─────────────────────────────────── DATA STREAM ─── */
+.data-stream-panel {
+  font-family: &#39;Share Tech Mono&#39;, monospace;
+  font-size: 0.65rem;
+  color: rgba(114,245,255,0.35);
+  line-height: 1.8;
+  overflow: hidden;
+  height: 200px;
+  position: relative;
+}
+.data-stream-inner {
+  animation: data-scroll 15s linear infinite;
+}
+
+/* ─────────────────────────────────── TELEMETRY TICKER ─── */
+.ticker-wrap {
+  overflow: hidden;
+  border-top: 1px solid rgba(114,245,255,0.1);
+  border-bottom: 1px solid rgba(114,245,255,0.1);
+  background: rgba(0,0,0,0.3);
+  padding: 8px 0;
+}
+.ticker-inner {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: data-scroll 30s linear infinite;
+  font-family: &#39;Share Tech Mono&#39;, monospace;
+  font-size: 0.7rem;
+  color: rgba(114,245,255,0.6);
+  letter-spacing: 0.12em;
+}
+/* Reset data-scroll for ticker to horizontal */
+@keyframes ticker-move {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.ticker-inner { animation: ticker-move 40s linear infinite; }
+
+/* ─────────────────────────────────── ISS / MAP ─── */
+.radar-sweep {
+  position: absolute;
+  inset: 0;
+  border-radius: 0;
+  background: conic-gradient(from 0deg, transparent 0deg, rgba(114,245,255,0.08) 20deg, transparent 40deg);
+  animation: radar-sweep 4s linear infinite;
+  pointer-events: none;
+}
+
+/* ─────────────────────────────────── TIMELINE ─── */
+.timeline-dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.2);
+  background: var(--bg);
+  position: absolute; top: 0; left: 0;
+  transition: all 0.4s ease;
+}
+.timeline-dot.active {
+  border-color: var(--cyan);
+  box-shadow: 0 0 12px var(--cyan-glow);
+}
+.timeline-item {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.timeline-item.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─────────────────────────────────── VIGNETTE / OVERLAYS ─── */
+.hero-vignette {
+  background: linear-gradient(to right, rgba(6,6,12,0.7) 0%, rgba(6,6,12,0.3) 45%, transparent 70%);
+  pointer-events: none;
+}
+.starfield-css {
+  background-image:
+    radial-gradient(1px 1px at 5% 8%, white, transparent),
+    radial-gradient(1.5px 1.5px at 12% 22%, rgba(255,255,255,0.9), transparent),
+    radial-gradient(1px 1px at 18% 55%, rgba(114,245,255,0.8), transparent),
+    radial-gradient(2px 2px at 22% 38%, white, transparent),
+    radial-gradient(1px 1px at 28% 70%, rgba(255,255,255,0.7), transparent),
+    radial-gradient(1.5px 1.5px at 33% 15%, rgba(114,245,255,0.7), transparent),
+    radial-gradient(1px 1px at 38% 82%, white, transparent),
+    radial-gradient(2px 2px at 42% 48%, rgba(255,255,255,0.9), transparent),
+    radial-gradient(1px 1px at 48% 25%, rgba(114,245,255,0.6), transparent),
+    radial-gradient(1.5px 1.5px at 53% 63%, white, transparent),
+    radial-gradient(1px 1px at 58% 10%, rgba(255,255,255,0.8), transparent),
+    radial-gradient(2px 2px at 62% 78%, rgba(114,245,255,0.5), transparent),
+    radial-gradient(1px 1px at 67% 42%, white, transparent),
+    radial-gradient(1.5px 1.5px at 72% 88%, rgba(255,255,255,0.7), transparent),
+    radial-gradient(1px 1px at 78% 30%, rgba(114,245,255,0.9), transparent),
+    radial-gradient(2px 2px at 83% 18%, white, transparent),
+    radial-gradient(1px 1px at 88% 65%, rgba(255,255,255,0.6), transparent),
+    radial-gradient(1.5px 1.5px at 93% 50%, rgba(114,245,255,0.7), transparent),
+    radial-gradient(1px 1px at 97% 85%, white, transparent),
+    radial-gradient(1px 1px at 7% 45%, rgba(255,255,255,0.5), transparent),
+    radial-gradient(1.5px 1.5px at 15% 90%, rgba(114,245,255,0.4), transparent),
+    radial-gradient(1px 1px at 25% 5%, white, transparent),
+    radial-gradient(1px 1px at 35% 95%, rgba(255,255,255,0.6), transparent),
+    radial-gradient(1px 1px at 45% 35%, rgba(114,245,255,0.5), transparent),
+    radial-gradient(1.5px 1.5px at 55% 92%, white, transparent),
+    radial-gradient(1px 1px at 65% 55%, rgba(255,255,255,0.7), transparent),
+    radial-gradient(1px 1px at 75% 8%, rgba(114,245,255,0.6), transparent),
+    radial-gradient(2px 2px at 85% 40%, white, transparent),
+    radial-gradient(1px 1px at 95% 20%, rgba(255,255,255,0.8), transparent);
+  background-size: 500px 500px;
+}
+
+/* ─────────────────────────────────── STATUS BADGE ─── */
+.status-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 16px;
+  border-radius: 2px;
+  font-family: &#39;Share Tech Mono&#39;, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border: 1px solid rgba(74,222,128,0.3);
+  background: rgba(74,222,128,0.07);
+  color: #4ADE80;
+}
+.status-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #4ADE80;
+  box-shadow: 0 0 8px #4ADE80;
+  animation: pulse-cyan 1.5s infinite;
+}
+
+/* ─────────────────────────────────── MISC ─── */
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { scrollbar-width: none; }
+
+.text-mono { font-family: &#39;Share Tech Mono&#39;, monospace; }
+.text-display { font-family: &#39;Orbitron&#39;, sans-serif; }
+
+.corner-bracket {
+  position: absolute;
+  width: 16px; height: 16px;
+  border-color: var(--cyan);
+  border-style: solid;
+  opacity: 0.4;
+}
+.corner-bracket.tl { top: -1px; left: -1px; border-width: 1.5px 0 0 1.5px; }
+.corner-bracket.tr { top: -1px; right: -1px; border-width: 1.5px 1.5px 0 0; }
+.corner-bracket.bl { bottom: -1px; left: -1px; border-width: 0 0 1.5px 1.5px; }
+.corner-bracket.br { bottom: -1px; right: -1px; border-width: 0 1.5px 1.5px 0; }
+
+.glow-card {
+  position: relative;
+  background: rgba(12,12,26,0.5);
+  border: 1px solid var(--border);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.glow-card:hover {
+  border-color: rgba(114,245,255,0.2);
+  box-shadow: 0 0 40px rgba(114,245,255,0.06);
+}
+
+/* Parallax layers */
+#hero-section { position: relative; overflow: hidden; }
+.parallax-slow { will-change: transform; }
+.parallax-fast { will-change: transform; }
+
+/* Counter number */
+.counter-num { font-family: &#39;Orbitron&#39;, sans-serif; font-size: 2.2rem; color: var(--cyan); font-weight: 700; }
+
+/* Footer */
+footer .footer-logo { font-family: &#39;Orbitron&#39;, sans-serif; }
+
+/* ─────────────────────────────────── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  html { cursor: auto; }
+  #cursor-crosshair { display: none; }
+  .cursor-trail { display: none; }
+}
+
+/* ─────────────────────────────────── LIGHT MODE ─── */
+html.light body { background-color: #f0f4f8; color: #0a1628; }
+html.light { --bg: #f0f4f8; --bg-card: #e2eaf3; --border: rgba(0,0,0,0.08); --border-cyan: rgba(0,100,140,0.3); }
+html.light body, html.light #particle-canvas { opacity: 0.25; }
+html.light nav { background: rgba(230,238,248,0.95) !important; border-color: rgba(0,100,140,0.15) !important; }
+html.light nav.scrolled { background: rgba(230,238,248,0.99) !important; }
+html.light .nav-logo { color: #006080; }
+html.light .glitch-main { background: linear-gradient(120deg,#0a1628 0%,#003050 45%,#006080 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+html.light .status-badge { border-color: rgba(0,150,80,0.4); background: rgba(0,150,80,0.07); color: #00803a; }
+html.light .status-dot { background: #00803a; box-shadow: 0 0 8px #00803a; }
+html.light section { background: transparent !important; }
+html.light .planet-card { background: rgba(220,232,244,0.7); border-color: rgba(0,0,0,0.08); }
+html.light .planet-card:hover { border-color: rgba(0,100,140,0.4); box-shadow: 0 0 30px rgba(0,100,140,0.1); }
+html.light .glow-card { background: rgba(220,232,244,0.6); border-color: rgba(0,0,0,0.08); }
+html.light .hero-vignette { background: linear-gradient(to right, rgba(240,244,248,0.8) 0%, rgba(240,244,248,0.3) 45%, transparent 70%); }
+html.light #scroll-progress { background: linear-gradient(90deg, #006080, #00a0b0); }
+html.light footer { background: #e2eaf3; border-color: rgba(0,0,0,0.08); }
+html.light .ticker-wrap { background: #006080 !important; }
+html.light .btn-primary { background: #006080; color: #fff; }
+html.light .btn-secondary { color: #006080; border-color: rgba(0,96,128,0.5); }
+html.light .planet-data-row .value { color: #006080; }
+html.light #orrery-section, html.light #constellation-section { background: #e8f0f8 !important; }
+html.light .grid-overlay { opacity: 0.015; }
+
+/* ─────────────────────────────────── ORRERY ─── */
+#orrery-canvas {
+  display: block;
+  width: 100%;
+  max-width: 900px;
+  height: 520px;
+  margin: 0 auto;
+  cursor: crosshair;
+}
+.orrery-planet-info {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.orrery-planet-info.hidden { opacity: 0; pointer-events: none; transform: translateY(8px); }
+
+/* ─────────────────────────────────── CONSTELLATION ─── */
+#constellation-canvas {
+  display: block;
+  width: 100%;
+  height: 420px;
+  cursor: crosshair;
+}
+
+/* Sound toggle */
+#sound-toggle {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  z-index: 200;
+  width: 44px; height: 44px;
+  border-radius: 2px;
+  background: rgba(12,12,26,0.85);
+  border: 1px solid rgba(114,245,255,0.3);
+  backdrop-filter: blur(12px);
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+#sound-toggle:hover { border-color: var(--cyan); box-shadow: 0 0 16px rgba(114,245,255,0.2); }
+html.light #sound-toggle { background: rgba(230,238,248,0.9); border-color: rgba(0,100,140,0.3); }
+    </style>
+  </head>
+  <body class="bg-[#06060C] text-on-background min-h-screen flex flex-col overflow-x-hidden">
+    <!-- ── SCROLL PROGRESS BAR ── -->
+    <div id="scroll-progress">
+    </div>
+    <!-- ── FIXED PARTICLE CANVAS ── -->
+    <canvas id="particle-canvas">
+    </canvas>
+    <!-- ── SUBTLE GRID OVERLAY ── -->
+    <div class="grid-overlay">
+    </div>
+    <!-- ── CUSTOM CROSSHAIR CURSOR ── -->
+    <div id="cursor-crosshair">
+      <div class="h-line">
+      </div>
+      <div class="v-line">
+      </div>
+      <div class="corner tl">
+      </div>
+      <div class="corner tr">
+      </div>
+      <div class="corner bl">
+      </div>
+      <div class="corner br">
+      </div>
+      <div class="center-dot">
+      </div>
+    </div>
+    <!-- ── NAVBAR ── -->
+    <nav id="navbar" class="bg-black/80 backdrop-blur-xl border-b border-white/5 fixed top-0 w-full z-50 flex justify-between items-center px-16 py-4">
+      <div class="nav-logo text-primary tracking-widest uppercase text-lg font-bold">
+        Astra Command
+      </div>
+      <div class="hidden md:flex gap-8 items-center">
+        <a class="text-mono text-xs text-primary border-b border-primary pb-0.5 tracking-widest uppercase" href="#">        Solar System
+</a>
+        <a class="text-mono text-xs text-[#8A9BA8] hover:text-primary transition-colors tracking-widest uppercase" href="#">        Planet Archive
+</a>
+        <a class="text-mono text-xs text-[#8A9BA8] hover:text-primary transition-colors tracking-widest uppercase" href="#">        Daily APOD
+</a>
+        <a class="text-mono text-xs text-[#8A9BA8] hover:text-primary transition-colors tracking-widest uppercase" href="#">        News Hub
+</a>
+        <a class="text-mono text-xs text-[#8A9BA8] hover:text-primary transition-colors tracking-widest uppercase" href="#">        Telemetry
+</a>
+      </div>
+      <button class="hidden md:flex items-center gap-2 bg-primary text-on-primary px-5 py-2.5 font-bold hover:brightness-110 transition-all" style="font-family:&#39;Orbitron&#39;,sans-serif; font-size:0.65rem; letter-spacing:0.1em; border-radius:2px;">
+        Command Center
+        <span class="material-symbols-outlined text-[16px]" style="font-variation-settings:&#39;FILL&#39; 1;">        arrow_forward
+</span>
+      </button>
+      <!-- Theme Toggle -->
+      <button id="theme-toggle" title="Toggle light/dark" class="hidden md:flex items-center justify-center w-10 h-10 border border-white/20 hover:border-primary transition-all" style="border-radius:2px; background:rgba(255,255,255,0.04); backdrop-filter:blur(8px); flex-shrink:0;">
+        <span id="theme-icon" class="material-symbols-outlined text-primary text-[18px]" style="font-variation-settings:&#39;FILL&#39; 1;">        light_mode
+</span>
+      </button>
+    </nav>
+    <!-- ── MAIN ── -->
+    <main class="flex-grow pt-[72px]">
+      <!-- ════════════════════════════════ HERO ═══════════════════════════ -->
+      <section id="hero-section" class="min-h-screen w-full flex flex-col lg:flex-row px-5 lg:pl-16 lg:pr-16 relative overflow-hidden items-center starfield-css" style="padding-top:0;">
+        <!-- Moving scanline -->
+        <div class="hero-scanline">
+        </div>
+        <!-- Milky Way photo backdrop -->
+        <div class="absolute inset-0 z-0" style="background-image: url(&#39;img_milkyway.jpg&#39;); background-size: cover; background-position: center top; opacity: 0.22; mix-blend-mode: screen;">
+        </div>
+        <!-- Real starfield photo — layer 2: authentic star depth -->
+        <div class="absolute inset-0 z-0" style="background-image: url(&#39;img_starfield.jpg&#39;); background-size: cover; background-position: center; opacity: 0.40; mix-blend-mode: screen;">
+        </div>
+        <!-- Nebula purple atmospheric glow -->
+        <div class="absolute inset-0 z-0" style="background-image: url(&#39;img_nebula_purple.jpg&#39;); background-size: cover; background-position: right center; opacity: 0.07; mix-blend-mode: screen;">
+        </div>
+        <!-- Starfield overlay -->
+        <div class="absolute inset-0 z-0 opacity-40" style="background-image: radial-gradient(circle at 20% 50%, rgba(114,245,255,0.04) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(114,245,255,0.03) 0%, transparent 40%);">
+        </div>
+        <!-- Left vignette -->
+        <div class="absolute inset-0 hero-vignette z-[1]">
+        </div>
+        <!-- ── LEFT COLUMN ── -->
+        <div class="w-full lg:w-1/2 flex flex-col justify-center z-10 py-16 lg:py-0 parallax-fast">
+          <!-- Status badge -->
+          <div class="hero-animate d1 mb-8 self-start">
+            <div class="status-badge">
+              <span class="status-dot"></span>
+              System Online — All Systems Nominal
+            </div>
+          </div>
+          <!-- Glitch title -->
+          <div class="hero-animate d2 flex items-center mb-7">
+            <div class="w-[3px] h-[88px] mr-6 rounded-full flex-shrink-0" style="background:linear-gradient(to bottom,#72f5ff,rgba(114,245,255,0.02)); box-shadow:0 0 20px rgba(114,245,255,0.8);">
+            </div>
+            <div class="glitch-wrapper">
+              <h1 class="glitch-main text-display" style="font-size:clamp(42px,5vw,78px); font-weight:900; line-height:1.05;">
+                Astra
+                <br />
+                Command
+              </h1>
+              <h1 class="glitch-overlay text-display" aria-hidden="true" style="font-size:clamp(42px,5vw,78px); font-weight:900; line-height:1.05;">
+                Astra
+                <br />
+                Command
+              </h1>
+            </div>
+          </div>
+          <!-- Subtitle -->
+          <p class="hero-animate d3 text-lg leading-relaxed mb-8 max-w-[440px]" style="color:rgba(255,255,255,0.65); line-height:1.8; letter-spacing:0.02em; font-family:&#39;Rajdhani&#39;,sans-serif;">
+            Explore the solar system. Track the ISS live.
+            <br />
+            Discover today&#39;s universe with live NASA data.
+          </p>
+          <!-- Stats row -->
+          <div class="hero-animate d4 inline-flex items-center gap-5 mb-10 px-5 py-3 self-start relative" style="background:rgba(255,255,255,0.04); backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.07); border-radius:2px;">
+            <div class="corner-bracket tl">
+            </div>
+            <div class="corner-bracket tr">
+            </div>
+            <div class="corner-bracket bl">
+            </div>
+            <div class="corner-bracket br">
+            </div>
+            <div class="flex flex-col items-center">
+              <span class="text-display text-primary font-bold text-xl" data-counter="8">              8
+</span>
+              <span class="text-mono text-[0.6rem] text-on-surface-variant tracking-widest uppercase">              Planets
+</span>
+            </div>
+            <div class="w-px h-8 bg-white/10">
+            </div>
+            <div class="flex flex-col items-center">
+              <span class="text-display text-primary font-bold text-xl" data-counter="200">              200+
+</span>
+              <span class="text-mono text-[0.6rem] text-on-surface-variant tracking-widest uppercase">              Moons
+</span>
+            </div>
+            <div class="w-px h-8 bg-white/10">
+            </div>
+            <div class="flex flex-col items-center gap-1">
+              <span class="material-symbols-outlined text-primary text-[20px]" style="filter:drop-shadow(0 0 6px #72f5ff); font-variation-settings:&#39;FILL&#39; 1;">              rocket_launch
+</span>
+              <span class="text-mono text-[0.6rem] text-primary tracking-widest uppercase">              Live Data
+</span>
+            </div>
+          </div>
+          <!-- Buttons -->
+          <div class="hero-animate d5 flex flex-col sm:flex-row gap-4">
+            <button class="btn-primary" data-magnetic="">
+              Explore Solar System
+              <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:&#39;FILL&#39; 1;">              arrow_forward
+</span>
+            </button>
+            <button class="btn-secondary" data-magnetic="">
+              View Today&#39;s APOD
+              <span class="material-symbols-outlined text-[18px]">              arrow_forward
+</span>
+            </button>
+          </div>
+        </div>
+        <!-- ── RIGHT COLUMN — Earth ── -->
+        <div class="w-full lg:w-1/2 h-full flex items-center justify-center relative z-0 min-h-[500px] parallax-slow">
+          <div class="absolute w-[700px] h-[700px] rounded-full pointer-events-none" style="background:radial-gradient(circle, rgba(114,245,255,0.08) 0%, transparent 70%); filter:blur(50px);">
+          </div>
+          <div class="relative w-[420px] h-[420px] flex items-center justify-center earth-container">
+            <div class="orbit-ring-1 pointer-events-none">
+              <div class="satellite" style="top:50%; right:-2px;">
+              </div>
+            </div>
+            <div class="orbit-ring-2 pointer-events-none">
+              <div class="satellite" style="bottom:30%; left:-2px;">
+              </div>
+              <div class="satellite" style="top:20%; right:10%;">
+              </div>
+            </div>
+            <div class="relative w-full h-full rounded-full earth-atmosphere overflow-hidden z-10">
+              <img alt="Earth Globe" class="w-full h-full object-cover mix-blend-screen" style="animation:slow-rotate 40s linear infinite;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuANcsx5Q09DUGcTHfqPH2vubsLN05tuimKv1UJ0jDzxg32n1mGAfmtpbUBGbdPiAiAqLGzhw6V5balbtMtCtUFtu83iLqaJHzD5vM8pbu8fgEVysja_ONPTZoTc_ggiYu5NfGbuFJqbIWY3G9qSq6XFdY5Aekixi8S6VZIzHyGv3eaHrvJV7iGnhbKMtTsEYcSYB39B5YiaQLYGMWOn9D_5k8WxY7CehyDEzsZUlBJZXh_xBi_KHgaucjTfDYm4wnTVZZUgzFZxttpM" />
+            </div>
+          </div>
+          <!-- HUD overlays -->
+          <div class="absolute top-8 right-8 text-mono text-[0.62rem] text-primary/50 space-y-1 text-right">
+            <div>
+              LAT: 51.5074° N
+            </div>
+            <div>
+              LON: 0.1278° W
+            </div>
+            <div>
+              ALT: 408 KM
+            </div>
+            <div>
+              VEL: 27,600 KM/H
+            </div>
+          </div>
+          <div class="absolute bottom-12 left-4 text-mono text-[0.6rem] text-primary/40">
+            <div>
+              // ORBITAL MECHANICS ACTIVE
+            </div>
+            <div>
+              // SATELLITE FEED NOMINAL
+            </div>
+          </div>
+        </div>
+        <!-- Bottom gradient fade -->
+        <div class="absolute inset-x-0 bottom-0 h-48 pointer-events-none z-30" style="background:linear-gradient(to top, #06060C 0%, transparent 100%);">
+        </div>
+      </section>
+      <!-- ── TELEMETRY TICKER ── -->
+      <div class="ticker-wrap relative z-10">
+        <div class="ticker-inner">
+          <span class="mx-8">          ◈ ISS POSITION: 51.5°N 12.3°E ◈
+</span>
+          <span class="mx-8">          ◈ ORBITAL PERIOD: 92.9 MIN ◈
+</span>
+          <span class="mx-8">          ◈ SOLAR WIND: 450 KM/S ◈
+</span>
+          <span class="mx-8">          ◈ JWST STATUS: NOMINAL ◈
+</span>
+          <span class="mx-8">          ◈ CME ALERT: NONE ◈
+</span>
+          <span class="mx-8">          ◈ MARS ROVER: ACTIVE ◈
+</span>
+          <span class="mx-8">          ◈ VOYAGER-1: 23.5B KM ◈
+</span>
+          <span class="mx-8">          ◈ LUNAR CYCLE: WAXING GIBBOUS ◈
+</span>
+          <span class="mx-8">          ◈ APOD: THE CARINA NEBULA ◈
+</span>
+          <!-- Duplicate for seamless loop -->
+          <span class="mx-8">          ◈ ISS POSITION: 51.5°N 12.3°E ◈
+</span>
+          <span class="mx-8">          ◈ ORBITAL PERIOD: 92.9 MIN ◈
+</span>
+          <span class="mx-8">          ◈ SOLAR WIND: 450 KM/S ◈
+</span>
+          <span class="mx-8">          ◈ JWST STATUS: NOMINAL ◈
+</span>
+          <span class="mx-8">          ◈ CME ALERT: NONE ◈
+</span>
+          <span class="mx-8">          ◈ MARS ROVER: ACTIVE ◈
+</span>
+          <span class="mx-8">          ◈ VOYAGER-1: 23.5B KM ◈
+</span>
+          <span class="mx-8">          ◈ LUNAR CYCLE: WAXING GIBBOUS ◈
+</span>
+          <span class="mx-8">          ◈ APOD: THE CARINA NEBULA ◈
+</span>
+        </div>
+      </div>
+      <!-- ════════════════════════════ SOLAR SYSTEM ══════════════════════ -->
+      <section class="py-20 px-5 lg:px-16 relative overflow-hidden" style="background:#06060C;">
+        <div class="absolute inset-x-0 top-0 h-24 pointer-events-none" style="background:linear-gradient(to bottom,#06060C,transparent);">
+        </div>
+        <div class="max-w-[1440px] mx-auto">
+          <!-- Section header -->
+          <div class="flex justify-between items-end mb-12">
+            <div class="section-heading reveal" data-reveal="">
+              <span class="section-label">              // 001 — PLANETARY ARCHIVE
+</span>
+              <h2 class="text-display text-4xl font-bold text-on-surface mt-2">
+                Explore the Planets
+              </h2>
+              <p class="font-body text-lg text-on-surface-variant mt-2">
+                Definitive planetary data and orbital parameters.
+              </p>
+            </div>
+            <div class="hidden md:flex gap-3 reveal from-right" data-reveal="">
+              <button class="w-12 h-12 border border-white/15 flex items-center justify-center text-white hover:border-primary hover:text-primary transition-all" style="border-radius:2px;" id="planet-prev">
+                <span class="material-symbols-outlined text-2xl">                arrow_back
+</span>
+              </button>
+              <button class="w-12 h-12 border border-white/15 flex items-center justify-center text-white hover:border-primary hover:text-primary transition-all" style="border-radius:2px;" id="planet-next">
+                <span class="material-symbols-outlined text-2xl">                arrow_forward
+</span>
+              </button>
+            </div>
+          </div>
+          <!-- Planet cards scrollable row -->
+          <div class="flex overflow-x-auto gap-6 pb-8 snap-x hide-scrollbar stagger-children" id="planet-row" data-stagger="">
+            <!-- Mercury -->
+            <div class="planet-card min-w-[260px] w-[260px] flex-shrink-0 rounded-none p-6 snap-start cursor-pointer relative" data-tilt="">
+              <div class="corner-bracket tl">
+              </div>
+              <div class="corner-bracket tr">
+              </div>
+              <div class="corner-bracket bl">
+              </div>
+              <div class="corner-bracket br">
+              </div>
+              <div class="w-[100px] h-[100px] mx-auto mb-5 flex items-center justify-center">
+                <img alt="Mercury" class="planet-img mercury-glow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMi551gAUb2ToiEGkolOZ2bRl2Zty5k5xi0FDcMp1IIjiIjw9PN6csK7JnrBpyBPHqhhTyUWnW0hG-b7lrA5Vhx0i_UG0F1X8uFTPc3su2A7OAjNZ2nGPFr2pg7zIpkaSGa3LtAa0ILGB2nRb2GewBFKOMBTWeD3aMaFtKtAOwnRkJi5r2gbky1uAvZ_Fl9iNVc7NUpVY3soWQE7NXJdGLZu2uvzHZ1eZDRCP0l6n3q6Qh1vSSIUc9VZPTywIubUsPliiPEfQKtCXz" />
+              </div>
+              <h3 class="text-display text-lg font-semibold text-on-surface text-center mb-3">
+                Mercury
+              </h3>
+              <div class="planet-data-row">
+                <span class="label">                DIST FROM SUN
+</span>
+                <span class="value">                57.9M KM
+</span>
+              </div>
+              <div class="planet-data-row">
+                <span class="label">                ORBITAL PERIOD
+</span>
+                <span class="value">                88 DAYS
+</span>
+              </div>
+              <div class="planet-data-row border-0">
+                <span class="label">                DIAMETER
+</span>
+                <span class="value">                4,879 KM
+</span>
+              </div>
+            </div>
+            <!-- Venus -->
+            <div class="planet-card min-w-[260px] w-[260px] flex-shrink-0 rounded-none p-6 snap-start cursor-pointer relative" data-tilt="">
+              <div class="corner-bracket tl">
+              </div>
+              <div class="corner-bracket tr">
+              </div>
+              <div class="corner-bracket bl">
+              </div>
+              <div class="corner-bracket br">
+              </div>
+              <div class="w-[100px] h-[100px] mx-auto mb-5 flex items-center justify-center">
+                <img alt="Venus" class="planet-img venus-glow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbRXjxYGfDX8-En77dX-SqU9P-DZlJqYbNaISeY8-lhOzTpJb_i_TU_zDz2y1poCeoA0rGl7uZop4lPDcSWxYoGccgp4FWAscyryEi-I2Dj8gCdq1Bdv--Icxlc9z2czFxpOQ94deWHYPKdi-KKpTwCF3gzhM9lyrfNHJhns9xXQq7nb8vfo4-7wq4agBtZivrDvZzh-4sBdNzv3NZtXQ0OcvbHj01Wk0_9M_cH1EAATxTO3T3ePeyMwjPkhgOUg8X40VyrgUybe1v" />
+              </div>
+              <h3 class="text-display text-lg font-semibold text-on-surface text-center mb-3">
+                Venus
+              </h3>
+              <div class="planet-data-row">
+                <span class="label">                DIST FROM SUN
+</span>
+                <span class="value">                108.2M KM
+</span>
+              </div>
+              <div class="planet-data-row">
+                <span class="label">                ORBITAL PERIOD
+</span>
+                <span class="value">                225 DAYS
+</span>
+              </div>
+              <div class="planet-data-row border-0">
+                <span class="label">                DIAMETER
+</span>
+                <span class="value">                12,104 KM
+</span>
+              </div>
+            </div>
+            <!-- Earth (highlighted) -->
+            <div class="planet-card min-w-[260px] w-[260px] flex-shrink-0 rounded-none p-6 snap-start cursor-pointer relative" style="border-color:rgba(114,245,255,0.25); background:rgba(12,12,26,0.8);" data-tilt="">
+              <div class="corner-bracket tl" style="opacity:0.7;">
+              </div>
+              <div class="corner-bracket tr" style="opacity:0.7;">
+              </div>
+              <div class="corner-bracket bl" style="opacity:0.7;">
+              </div>
+              <div class="corner-bracket br" style="opacity:0.7;">
+              </div>
+              <div class="absolute top-3 right-3 text-primary">
+                <span class="material-symbols-outlined text-[16px]">                home
+</span>
+              </div>
+              <div class="w-[100px] h-[100px] mx-auto mb-5 flex items-center justify-center">
+                <img alt="Earth" class="planet-img earth-glow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuANcsx5Q09DUGcTHfqPH2vubsLN05tuimKv1UJ0jDzxg32n1mGAfmtpbUBGbdPiAiAqLGzhw6V5balbtMtCtUFtu83iLqaJHzD5vM8pbu8fgEVysja_ONPTZoTc_ggiYu5NfGbuFJqbIWY3G9qSq6XFdY5Aekixi8S6VZIzHyGv3eaHrvJV7iGnhbKMtTsEYcSYB39B5YiaQLYGMWOn9D_5k8WxY7CehyDEzsZUlBJZXh_xBi_KHgaucjTfDYm4wnTVZZUgzFZxttpM" />
+              </div>
+              <h3 class="text-display text-lg font-semibold text-primary text-center mb-3">
+                Earth
+              </h3>
+              <div class="planet-data-row">
+                <span class="label">                DIST FROM SUN
+</span>
+                <span class="value">                149.6M KM
+</span>
+              </div>
+              <div class="planet-data-row">
+                <span class="label">                ORBITAL PERIOD
+</span>
+                <span class="value">                365 DAYS
+</span>
+              </div>
+              <div class="planet-data-row border-0">
+                <span class="label">                DIAMETER
+</span>
+                <span class="value">                12,742 KM
+</span>
+              </div>
+            </div>
+            <!-- Mars -->
+            <div class="planet-card min-w-[260px] w-[260px] flex-shrink-0 rounded-none p-6 snap-start cursor-pointer relative" data-tilt="">
+              <div class="corner-bracket tl">
+              </div>
+              <div class="corner-bracket tr">
+              </div>
+              <div class="corner-bracket bl">
+              </div>
+              <div class="corner-bracket br">
+              </div>
+              <div class="w-[100px] h-[100px] mx-auto mb-5 flex items-center justify-center">
+                <img alt="Mars" class="planet-img mars-glow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXH4oet5njdAVgnx7YtBMBknR7tHA73IgTw7fZEuhiJkTu1jLU0s-2NFwVS5YZE6lVW64OnN6OaJSX4-Izu7Xc6cwSZQzOHyxkN8WFEx6MnGhWmALEZY-cRNRrJSLzPO6a7OSoF6YKBv7vCS3QggAiQWdpcV8JeF6J_0DIqwMgCAs675zPdsjOLeFP3lUiliKzP7XKrESLfJszBZfxvbLhdFRwLx1Tdhds0zKE1cr3ArF5lRmTuripMo_cGIvFZDGZJFIGPh7-qxoC" />
+              </div>
+              <h3 class="text-display text-lg font-semibold text-on-surface text-center mb-3">
+                Mars
+              </h3>
+              <div class="planet-data-row">
+                <span class="label">                DIST FROM SUN
+</span>
+                <span class="value">                227.9M KM
+</span>
+              </div>
+              <div class="planet-data-row">
+                <span class="label">                ORBITAL PERIOD
+</span>
+                <span class="value">                687 DAYS
+</span>
+              </div>
+              <div class="planet-data-row border-0">
+                <span class="label">                DIAMETER
+</span>
+                <span class="value">                6,779 KM
+</span>
+              </div>
+            </div>
+            <!-- Jupiter -->
+            <div class="planet-card min-w-[260px] w-[260px] flex-shrink-0 rounded-none p-6 snap-start cursor-pointer relative" data-tilt="">
+              <div class="corner-bracket tl">
+              </div>
+              <div class="corner-bracket tr">
+              </div>
+              <div class="corner-bracket bl">
+              </div>
+              <div class="corner-bracket br">
+              </div>
+              <div class="w-[100px] h-[100px] mx-auto mb-5 flex items-center justify-center">
+                <img alt="Jupiter" class="planet-img jupiter-glow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzCxUU17rOjhY1qHWo8YkGygm0uYSV4wMfHeKn3KTL31ez-JPTc1VixQ1ThMqdMLCOj7sk8WiHWIMffW3LvyLTHbuS0sq1CMzTn2R8o7AydKxrnjypxGkZSqm-ASy-6ipgOC3JEDrxb1Ut-fz0h1St0FRf4zDcxFGZbI45doX1jdQ3xaDXKIGFlqzgke8WrS87GYQC7OaU3cX-VmdBGfxtlY2FdtDn5kgprTiJWm0rIW4olVkBG-AJsC7qkD4HHhcBNuoT0nJjuLvG" />
+              </div>
+              <h3 class="text-display text-lg font-semibold text-on-surface text-center mb-3">
+                Jupiter
+              </h3>
+              <div class="planet-data-row">
+                <span class="label">                DIST FROM SUN
+</span>
+                <span class="value">                778.5M KM
+</span>
+              </div>
+              <div class="planet-data-row">
+                <span class="label">                ORBITAL PERIOD
+</span>
+                <span class="value">                4,333 DAYS
+</span>
+              </div>
+              <div class="planet-data-row border-0">
+                <span class="label">                DIAMETER
+</span>
+                <span class="value">                139,820 KM
+</span>
+              </div>
+            </div>
+            <!-- Saturn -->
+            <div class="planet-card min-w-[260px] w-[260px] flex-shrink-0 rounded-none p-6 snap-start cursor-pointer relative" data-tilt="">
+              <div class="corner-bracket tl">
+              </div>
+              <div class="corner-bracket tr">
+              </div>
+              <div class="corner-bracket bl">
+              </div>
+              <div class="corner-bracket br">
+              </div>
+              <div class="w-[100px] h-[100px] mx-auto mb-5 flex items-center justify-center">
+                <img alt="Saturn" class="planet-img saturn-glow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAaqlmKOtMBNhp88brme6euijOJZCky8xnJa59dxduFAGxs5O75hyyp8gvj7T1BGXq-2LE9LCz6tDJu7o3SIBCWoUMhSXPxsxZ6FzBJAjlZDZLnQA3IU6HBT4f5z4IrMTDyso30tyizWd_TKqTwlY_V4mab9oFBJpvAJIaD9l7YZkHnfNDmYaeEfOdmLDPB-8_KVdAoP8X8M0apjsK6JoVOUPNyZyIYu66ufUNKhoC4D_uztdZ734hgkxo39KDYZSC6uHZ3-vCk-PEO" />
+              </div>
+              <h3 class="text-display text-lg font-semibold text-on-surface text-center mb-3">
+                Saturn
+              </h3>
+              <div class="planet-data-row">
+                <span class="label">                DIST FROM SUN
+</span>
+                <span class="value">                1.4B KM
+</span>
+              </div>
+              <div class="planet-data-row">
+                <span class="label">                ORBITAL PERIOD
+</span>
+                <span class="value">                10,759 DAYS
+</span>
+              </div>
+              <div class="planet-data-row border-0">
+                <span class="label">                DIAMETER
+</span>
+                <span class="value">                116,460 KM
+</span>
+              </div>
+            </div>
+            <!-- Uranus -->
+            <div class="planet-card min-w-[260px] w-[260px] flex-shrink-0 rounded-none p-6 snap-start cursor-pointer relative" data-tilt="">
+              <div class="corner-bracket tl">
+              </div>
+              <div class="corner-bracket tr">
+              </div>
+              <div class="corner-bracket bl">
+              </div>
+              <div class="corner-bracket br">
+              </div>
+              <div class="w-[100px] h-[100px] mx-auto mb-5 flex items-center justify-center">
+                <img alt="Uranus" class="planet-img uranus-glow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYHnA1Qm7B2nYXmhCPBK7UpEU1raz-qkax0VMihp5gkAsT-h_4RHVV6mjFtjbvyEULHynCRJ72JEwOqjpZvlL-EwbyVoGKmgDzDUDW77SP9GX_FteOECDWsw_o0ApdEGYSVz2cdu7m0j6FN-gee6lXy3ebUU35HPUem3JS2dvhtGFvU3NYvd3k-d6jCjrrXR8JaIP0c9u6bj5ZtSAiXuczKQT-H-tH9sUMOGUDq9xwsClwNHNi-ny3tXP7d1aQ4BhHo15nSC5IMhQj" />
+              </div>
+              <h3 class="text-display text-lg font-semibold text-on-surface text-center mb-3">
+                Uranus
+              </h3>
+              <div class="planet-data-row">
+                <span class="label">                DIST FROM SUN
+</span>
+                <span class="value">                2.9B KM
+</span>
+              </div>
+              <div class="planet-data-row">
+                <span class="label">                ORBITAL PERIOD
+</span>
+                <span class="value">                30,589 DAYS
+</span>
+              </div>
+              <div class="planet-data-row border-0">
+                <span class="label">                DIAMETER
+</span>
+                <span class="value">                50,724 KM
+</span>
+              </div>
+            </div>
+            <!-- Neptune -->
+            <div class="planet-card min-w-[260px] w-[260px] flex-shrink-0 rounded-none p-6 snap-start cursor-pointer relative" data-tilt="">
+              <div class="corner-bracket tl">
+              </div>
+              <div class="corner-bracket tr">
+              </div>
+              <div class="corner-bracket bl">
+              </div>
+              <div class="corner-bracket br">
+              </div>
+              <div class="w-[100px] h-[100px] mx-auto mb-5 flex items-center justify-center">
+                <img alt="Neptune" class="planet-img neptune-glow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0F0N_hw1DAK2PdCGWO8BP0rvfSawAPg9SY7CRC8x4AVJfhysmumrOn1wFPXGS1LudMIveAqYwZ_BXO5BL4gMggFiG_5F0-8fprRM7hRLOAGubV-v-t8r-J_aTMEpL307T7NOtdFjaYvxCYlEgii6lkNBRwMU6BSfdMM-CXIWMmMY1msw8pFpu2uyWoQWt9ojWb2DwYlP79U4l9bHgVawKVJKU-Ui4sqQD-OTmHF6rqNStBv-pX826gzburaYeTj5S7WY7UwWTN8Oz" />
+              </div>
+              <h3 class="text-display text-lg font-semibold text-on-surface text-center mb-3">
+                Neptune
+              </h3>
+              <div class="planet-data-row">
+                <span class="label">                DIST FROM SUN
+</span>
+                <span class="value">                4.5B KM
+</span>
+              </div>
+              <div class="planet-data-row">
+                <span class="label">                ORBITAL PERIOD
+</span>
+                <span class="value">                59,800 DAYS
+</span>
+              </div>
+              <div class="planet-data-row border-0">
+                <span class="label">                DIAMETER
+</span>
+                <span class="value">                49,244 KM
+</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- ════════════════════════════ SOLAR ORRERY ══════════════════════ -->
+      <section id="orrery-section" class="py-20 px-5 lg:px-16 relative overflow-hidden" style="background:#06060C;">
+        <!-- B&W spiral galaxy bg -->
+        <div class="absolute inset-0 pointer-events-none" style="background-image:url(&#39;img_galaxy_spiral.jpg&#39;); background-size:cover; background-position:center; opacity:0.07; mix-blend-mode:screen;">
+        </div>
+        <div class="max-w-[1440px] mx-auto">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10">
+            <div class="section-heading reveal" data-reveal="">
+              <span class="section-label">              // 002 — INTERACTIVE ORRERY
+</span>
+              <h2 class="text-display text-4xl font-bold text-on-surface mt-2">
+                3D Solar System
+              </h2>
+              <p class="font-body text-lg text-on-surface-variant mt-2">
+                Live orbital mechanics. Click any planet to inspect.
+              </p>
+            </div>
+            <div class="flex gap-3 mt-4 md:mt-0 reveal from-right" data-reveal="">
+              <button id="orrery-speed-down" class="text-mono text-xs px-4 py-2 border border-white/15 hover:border-primary hover:text-primary text-on-surface-variant transition-all" style="border-radius:2px;">
+                − SLOW
+              </button>
+              <button id="orrery-speed-reset" class="text-mono text-xs px-4 py-2 border border-primary/40 text-primary transition-all" style="border-radius:2px;">
+                ◉ REAL
+              </button>
+              <button id="orrery-speed-up" class="text-mono text-xs px-4 py-2 border border-white/15 hover:border-primary hover:text-primary text-on-surface-variant transition-all" style="border-radius:2px;">
+                + FAST
+              </button>
+            </div>
+          </div>
+          <div class="relative reveal scale-up" data-reveal="" style="background:rgba(12,12,26,0.6); border:1px solid rgba(114,245,255,0.08); border-radius:2px; overflow:hidden;">
+            <div class="corner-bracket tl">
+            </div>
+            <div class="corner-bracket tr">
+            </div>
+            <div class="corner-bracket bl">
+            </div>
+            <div class="corner-bracket br">
+            </div>
+            <!-- HUD labels -->
+            <div class="absolute top-4 left-4 text-mono text-[0.6rem] text-primary/40 z-10">
+              // HELIOCENTRIC VIEW — J2000 EPOCH
+            </div>
+            <div class="absolute top-4 right-4 text-mono text-[0.6rem] text-primary/40 z-10" id="orrery-speed-label">
+              SPEED: 1×
+            </div>
+            <canvas id="orrery-canvas">
+            </canvas>
+            <!-- Planet info panel -->
+            <div id="planet-info-panel" class="orrery-planet-info hidden absolute bottom-6 left-1/2 -translate-x-1/2 bg-[#06060C]/90 border border-primary/30 px-8 py-4 text-center backdrop-blur-xl" style="border-radius:2px; min-width:260px;">
+              <div class="corner-bracket tl">
+              </div>
+              <div class="corner-bracket tr">
+              </div>
+              <div class="corner-bracket bl">
+              </div>
+              <div class="corner-bracket br">
+              </div>
+              <div class="text-mono text-[0.6rem] text-primary/60 mb-1" id="pip-label">
+                SELECTED BODY
+              </div>
+              <div class="text-display text-xl font-bold text-on-surface mb-2" id="pip-name">
+                —
+              </div>
+              <div class="grid grid-cols-3 gap-4 mt-3">
+                <div>
+                  <div class="text-mono text-[0.55rem] text-on-surface-variant">
+                    PERIOD
+                  </div>
+                  <div class="text-mono text-sm text-primary" id="pip-period">
+                    —
+                  </div>
+                </div>
+                <div>
+                  <div class="text-mono text-[0.55rem] text-on-surface-variant">
+                    DIST AU
+                  </div>
+                  <div class="text-mono text-sm text-primary" id="pip-dist">
+                    —
+                  </div>
+                </div>
+                <div>
+                  <div class="text-mono text-[0.55rem] text-on-surface-variant">
+                    MOONS
+                  </div>
+                  <div class="text-mono text-sm text-primary" id="pip-moons">
+                    —
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- ════════════════════════════ CONSTELLATION VIEWER ══════════════ -->
+      <section id="constellation-section" class="py-20 px-5 lg:px-16 relative overflow-hidden" style="background:#06060C;">
+        <!-- Cyan black hole - PERFECT color match -->
+        <div class="absolute inset-0 pointer-events-none" style="background-image:url(&#39;img_cyan_blackhole.png&#39;); background-size:cover; background-position:center right; opacity:0.12; mix-blend-mode:screen;">
+        </div>
+        <div class="max-w-[1440px] mx-auto">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10">
+            <div class="section-heading reveal" data-reveal="">
+              <span class="section-label">              // 003 — STAR MAP
+</span>
+              <h2 class="text-display text-4xl font-bold text-on-surface mt-2">
+                Constellation Viewer
+              </h2>
+              <p class="font-body text-lg text-on-surface-variant mt-2">
+                Navigate 12 zodiac constellations. Hover stars to reveal names.
+              </p>
+            </div>
+            <div class="flex flex-wrap gap-2 mt-4 md:mt-0 reveal from-right" data-reveal="" id="const-nav">
+            </div>
+          </div>
+          <div class="relative reveal scale-up" data-reveal="" style="background:rgba(6,6,12,0.9); border:1px solid rgba(114,245,255,0.08); border-radius:2px; overflow:hidden;">
+            <div class="corner-bracket tl">
+            </div>
+            <div class="corner-bracket tr">
+            </div>
+            <div class="corner-bracket bl">
+            </div>
+            <div class="corner-bracket br">
+            </div>
+            <div class="absolute top-4 left-4 text-mono text-[0.6rem] text-primary/40 z-10">
+              // CELESTIAL SPHERE — EQUATORIAL COORDINATES
+            </div>
+            <canvas id="constellation-canvas">
+            </canvas>
+            <div id="const-info" class="absolute bottom-4 left-4 text-mono text-[0.6rem] text-primary/50">
+              HOVER A STAR FOR DATA
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- ════════════════════════════ ISS + APOD BENTO ══════════════════ -->
+      <section class="py-20 px-5 lg:px-16 bg-[#06060C]">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 max-w-[1440px] mx-auto">
+          <!-- ISS Tracker -->
+          <div class="lg:col-span-7 glow-card overflow-hidden flex flex-col min-h-[500px] reveal from-left" data-reveal="" style="border-radius:2px;">
+            <div class="corner-bracket tl">
+            </div>
+            <div class="corner-bracket tr">
+            </div>
+            <div class="corner-bracket bl">
+            </div>
+            <div class="corner-bracket br">
+            </div>
+            <div class="p-6 border-b border-white/8 flex justify-between items-center bg-[#0c0c1a]/80">
+              <h2 class="text-display text-lg font-semibold text-on-surface flex items-center gap-3">
+                <span class="material-symbols-outlined text-primary">                public
+</span>
+                ISS Orbital Tracker
+              </h2>
+              <span class="text-mono text-xs font-bold text-primary flex items-center gap-2">              <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+              LIVE
+</span>
+            </div>
+            <div class="flex-grow relative bg-[#0a111a] flex flex-col">
+              <!-- Map -->
+              <div class="flex-grow w-full relative bg-[url(&#39;https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&amp;w=1000&amp;auto=format&amp;fit=crop&#39;)] bg-cover bg-center">
+                <div class="absolute inset-0 bg-[#06060C]/60 mix-blend-multiply">
+                </div>
+                <!-- B&W black hole overlay for depth -->
+                <div class="absolute inset-0" style="background-image:url(&#39;img_blackhole_bw.jpg&#39;); background-size:cover; background-position:center; opacity:0.12; mix-blend-mode:screen; pointer-events:none;">
+                </div>
+                <!-- Radar sweep overlay -->
+                <div class="radar-sweep absolute inset-0">
+                </div>
+                <!-- ISS dot with rings -->
+                <div id="iss-dot" class="absolute z-10" style="top:40%; left:60%">
+                  <div class="relative w-3 h-3">
+                    <div class="absolute inset-0 rounded-full bg-primary shadow-[0_0_15px_rgba(114,245,255,1)]">
+                    </div>
+                    <div class="absolute -inset-2 rounded-full border border-primary/40" style="animation:ping-slow 2s ease-out infinite;">
+                    </div>
+                    <div class="absolute -inset-4 rounded-full border border-primary/20" style="animation:ping-slow 2s ease-out infinite 0.5s;">
+                    </div>
+                  </div>
+                  <div class="absolute top-4 left-4 text-mono text-[0.58rem] text-primary whitespace-nowrap">
+                    ISS // ORBIT 408KM
+                  </div>
+                </div>
+                <!-- Grid lines overlay on map -->
+                <div class="absolute inset-0 opacity-10" style="background-image: linear-gradient(rgba(114,245,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(114,245,255,1) 1px, transparent 1px); background-size: 60px 60px;">
+                </div>
+              </div>
+              <!-- Stats Panel -->
+              <div class="bg-[#0c0c1a]/90 p-6 grid grid-cols-2 sm:grid-cols-4 gap-4 border-t border-white/8">
+                <div>
+                  <div class="text-mono text-[0.6rem] text-on-surface-variant mb-1 uppercase">
+                    Latitude
+                  </div>
+                  <div class="text-display text-base font-semibold text-on-surface" id="iss-lat">
+                    25.034 N
+                  </div>
+                </div>
+                <div>
+                  <div class="text-mono text-[0.6rem] text-on-surface-variant mb-1 uppercase">
+                    Longitude
+                  </div>
+                  <div class="text-display text-base font-semibold text-on-surface" id="iss-lon">
+                    45.123 E
+                  </div>
+                </div>
+                <div>
+                  <div class="text-mono text-[0.6rem] text-on-surface-variant mb-1 uppercase">
+                    Altitude
+                  </div>
+                  <div class="text-display text-base font-semibold text-on-surface" id="iss-alt">
+                    408 km
+                  </div>
+                </div>
+                <div>
+                  <div class="text-mono text-[0.6rem] text-on-surface-variant mb-1 uppercase">
+                    Velocity
+                  </div>
+                  <div class="text-display text-base font-semibold text-primary" id="iss-vel">
+                    27,600 km/h
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Daily APOD -->
+          <div class="lg:col-span-5 glow-card overflow-hidden flex flex-col reveal from-right" data-reveal="" style="border-radius:2px;">
+            <div class="corner-bracket tl">
+            </div>
+            <div class="corner-bracket tr">
+            </div>
+            <div class="corner-bracket bl">
+            </div>
+            <div class="corner-bracket br">
+            </div>
+            <div class="relative h-[250px] w-full overflow-hidden">
+              <img id="apod-img" alt="APOD Image" class="w-full h-full object-cover..." src="img_nebula_orange.jpg" />
+              <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(12,12,26,0.9) 0%, transparent 60%);">
+              </div>
+              <div class="absolute top-4 left-4 flex items-center gap-2 bg-black/60 backdrop-blur border border-white/10 px-3 py-1" style="border-radius:2px;">
+                <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                <span class="text-mono text-[0.6rem] font-semibold text-on-surface uppercase tracking-wider">                Live Sensor Feed
+</span>
+              </div>
+            </div>
+            <div class="p-8 flex flex-col justify-start gap-6 flex-grow bg-[#0c0c1a]/80">
+              <div>
+                <div class="text-mono text-[0.6rem] text-on-surface-variant uppercase tracking-widest mb-2">
+                  // Daily APOD
+                  <span id="apod-date" class="text-primary/60"></span>
+                </div>
+                <h4 id="apod-title" class="text-display text-2xl font-bold text-on-surface leading-tight">
+                  The Carina Nebula Complex
+                </h4>
+              </div>
+              <a id="apod-link" href="#" target="_blank" class="w-full bg-transparent text-on-surface border border-white/15 py-4 text-display text-xs font-semibold hover:border-primary hover:text-primary transition-all duration-300 flex justify-center items-center gap-2 tracking-widest uppercase" style="border-radius:2px;">              View Full Image
+              <span class="material-symbols-outlined text-[18px]">              open_in_new
+</span>
+</a>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- ════════════════════════════ DEEP SPACE BANNER ══════════════════ -->
+      <section class="relative overflow-hidden flex items-center justify-center" style="min-height:340px; background:#06060C;">
+        <!-- Star river image -->
+        <div class="absolute inset-0" style="background-image:url(&#39;img_starriver.jpg&#39;); background-size:cover; background-position:center; opacity:0.55; mix-blend-mode:screen;">
+        </div>
+        <!-- Dark gradient vignette from all sides -->
+        <div class="absolute inset-0" style="background: radial-gradient(ellipse at center, transparent 30%, #06060C 85%);">
+        </div>
+        <!-- Content -->
+        <div class="relative z-10 text-center px-8 reveal scale-up" data-reveal="">
+          <div class="text-mono text-[0.6rem] text-primary/50 tracking-[0.35em] mb-5 uppercase">
+            // Transmission from the Deep Field
+          </div>
+          <blockquote class="text-display text-2xl md:text-4xl font-black text-white leading-snug max-w-3xl mx-auto" style="text-shadow: 0 0 60px rgba(114,245,255,0.2); letter-spacing:0.02em;">
+            &#34;The cosmos is within us.
+            <br />
+            We are made of star-stuff.&#34;
+          </blockquote>
+          <div class="text-mono text-xs text-primary/40 mt-6 tracking-widest">
+            — CARL SAGAN
+          </div>
+        </div>
+      </section>
+      <!-- ════════════════════════════ MISSION TIMELINE ══════════════════ -->
+      <section class="py-20 px-5 lg:px-16 bg-[#06060C]">
+        <div class="max-w-[1440px] mx-auto">
+          <div class="section-heading reveal mb-16" data-reveal="">
+            <span class="section-label">            // 004 — HISTORICAL RECORD
+</span>
+            <h2 class="text-display text-4xl font-bold text-on-surface mt-2">
+              Mission Archives
+            </h2>
+          </div>
+          <div class="relative w-full overflow-x-auto pb-8 hide-scrollbar" id="timeline-container">
+            <!-- Central Line -->
+            <div class="absolute top-[5px] left-0 h-px w-full min-w-full" style="background: linear-gradient(90deg, var(--cyan) 0%, rgba(114,245,255,0.1) 100%);">
+            </div>
+            <div class="flex gap-16 w-max pt-1 px-4">
+              <!-- Timeline Items -->
+              <div class="timeline-item relative w-[220px]" data-timeline-item="">
+                <div class="timeline-dot active">
+                </div>
+                <div class="mt-8">
+                  <div class="text-mono text-sm text-primary font-bold mb-2">
+                    1957
+                  </div>
+                  <h3 class="text-display text-lg font-bold text-on-surface mb-3">
+                    Sputnik 1
+                  </h3>
+                  <p class="text-sm text-on-surface-variant leading-relaxed" style="font-family:&#39;Rajdhani&#39;,sans-serif;">
+                    First artificial Earth satellite deployed into elliptical low Earth orbit.
+                  </p>
+                </div>
+              </div>
+              <div class="timeline-item relative w-[220px]" data-timeline-item="">
+                <div class="timeline-dot">
+                </div>
+                <div class="mt-8">
+                  <div class="text-mono text-sm text-on-surface-variant font-bold mb-2">
+                    1969
+                  </div>
+                  <h3 class="text-display text-lg font-bold text-on-surface mb-3">
+                    Apollo 11
+                  </h3>
+                  <p class="text-sm text-on-surface-variant leading-relaxed" style="font-family:&#39;Rajdhani&#39;,sans-serif;">
+                    First successful human landing on the lunar surface.
+                  </p>
+                </div>
+              </div>
+              <div class="timeline-item relative w-[220px]" data-timeline-item="">
+                <div class="timeline-dot">
+                </div>
+                <div class="mt-8">
+                  <div class="text-mono text-sm text-on-surface-variant font-bold mb-2">
+                    1977
+                  </div>
+                  <h3 class="text-display text-lg font-bold text-on-surface mb-3">
+                    Voyager Program
+                  </h3>
+                  <p class="text-sm text-on-surface-variant leading-relaxed" style="font-family:&#39;Rajdhani&#39;,sans-serif;">
+                    Launch of twin spacecraft to study the outer Solar System.
+                  </p>
+                </div>
+              </div>
+              <div class="timeline-item relative w-[220px]" data-timeline-item="">
+                <div class="timeline-dot">
+                </div>
+                <div class="mt-8">
+                  <div class="text-mono text-sm text-on-surface-variant font-bold mb-2">
+                    1990
+                  </div>
+                  <h3 class="text-display text-lg font-bold text-on-surface mb-3">
+                    Hubble Telescope
+                  </h3>
+                  <p class="text-sm text-on-surface-variant leading-relaxed" style="font-family:&#39;Rajdhani&#39;,sans-serif;">
+                    Deployment of the primary space telescope into low Earth orbit.
+                  </p>
+                </div>
+              </div>
+              <div class="timeline-item relative w-[220px]" data-timeline-item="">
+                <div class="timeline-dot">
+                </div>
+                <div class="mt-8">
+                  <div class="text-mono text-sm text-on-surface-variant font-bold mb-2">
+                    2021
+                  </div>
+                  <h3 class="text-display text-lg font-bold text-on-surface mb-3">
+                    James Webb
+                  </h3>
+                  <p class="text-sm text-on-surface-variant leading-relaxed" style="font-family:&#39;Rajdhani&#39;,sans-serif;">
+                    Launch of the premier infrared space observatory.
+                  </p>
+                </div>
+              </div>
+              <div class="timeline-item relative w-[220px]" data-timeline-item="">
+                <div class="timeline-dot active">
+                </div>
+                <div class="mt-8">
+                  <div class="text-mono text-sm text-primary font-bold mb-2">
+                    2024
+                  </div>
+                  <h3 class="text-display text-lg font-bold text-on-surface mb-3">
+                    Artemis
+                  </h3>
+                  <p class="text-sm text-on-surface-variant leading-relaxed" style="font-family:&#39;Rajdhani&#39;,sans-serif;">
+                    Current program to establish a sustainable human presence on the Moon.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <!-- ── FOOTER ── -->
+    <footer class="bg-[#06060C] border-t border-white/8 w-full py-10 px-16 flex flex-col md:flex-row justify-between items-center gap-6">
+      <div class="footer-logo text-primary tracking-widest uppercase text-xl font-bold">
+        Astra Command
+      </div>
+      <div class="flex gap-8 items-center text-mono text-xs">
+        <a class="text-on-surface-variant hover:text-primary transition-colors tracking-widest uppercase" href="#">        Quick Links
+</a>
+        <a class="text-on-surface-variant hover:text-primary transition-colors tracking-widest uppercase" href="#">        API Citations
+</a>
+        <a class="text-on-surface-variant hover:text-primary transition-colors tracking-widest uppercase" href="#">        Privacy Protocol
+</a>
+        <a class="text-on-surface-variant hover:text-primary transition-colors tracking-widest uppercase" href="#">        Mission Control
+</a>
+      </div>
+      <div class="text-mono text-xs text-on-surface-variant">
+        © 2024 Astra Command. Status:
+        <span class="text-[#4ADE80]">        NOMINAL
+</span>
+      </div>
+    </footer>
+    <!-- ═══════════════════════════════════════ JAVASCRIPT ═══════════════ -->
+    <script>
+      // ────────────────────────────── CURSOR ──────────────────────────────
+const crosshair = document.getElementById(&#39;cursor-crosshair&#39;);
+let mouseX = 0, mouseY = 0;
+let curX = 0, curY = 0;
+
+document.addEventListener(&#39;mousemove&#39;, e =&gt; {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+});
+
+function animateCursor() {
+  curX += (mouseX - curX) * 0.12;
+  curY += (mouseY - curY) * 0.12;
+  crosshair.style.left = curX + &#39;px&#39;;
+  crosshair.style.top = curY + &#39;px&#39;;
+  requestAnimationFrame(animateCursor);
+}
+animateCursor();
+
+// Hover state
+const hoverables = document.querySelectorAll(&#39;a, button, [data-tilt], .planet-card&#39;);
+hoverables.forEach(el =&gt; {
+  el.addEventListener(&#39;mouseenter&#39;, () =&gt; document.body.classList.add(&#39;cursor-hover&#39;));
+  el.addEventListener(&#39;mouseleave&#39;, () =&gt; document.body.classList.remove(&#39;cursor-hover&#39;));
+});
+
+// Cursor trail
+const trails = [];
+for (let i = 0; i &lt; 6; i++) {
+  const t = document.createElement(&#39;div&#39;);
+  t.className = &#39;cursor-trail&#39;;
+  const size = (6 - i) * 1.5 + 1;
+  t.style.cssText = `width:${size}px; height:${size}px; opacity:${0.5 - i * 0.07};`;
+  document.body.appendChild(t);
+  trails.push({ el: t, x: 0, y: 0 });
+}
+
+function animateTrails() {
+  let px = mouseX, py = mouseY;
+  trails.forEach((t, i) =&gt; {
+    t.x += (px - t.x) * (0.25 - i * 0.025);
+    t.y += (py - t.y) * (0.25 - i * 0.025);
+    t.el.style.left = t.x + &#39;px&#39;;
+    t.el.style.top = t.y + &#39;px&#39;;
+    t.el.style.transform = &#39;translate(-50%, -50%)&#39;;
+    px = t.x; py = t.y;
+  });
+  requestAnimationFrame(animateTrails);
+}
+animateTrails();
+
+// ────────────────────────────── PARTICLE CANVAS ──────────────────────
+const canvas = document.getElementById(&#39;particle-canvas&#39;);
+const ctx = canvas.getContext(&#39;2d&#39;);
+let W, H, particles = [];
+let mx = -1000, my = -1000;
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener(&#39;resize&#39;, resize);
+
+document.addEventListener(&#39;mousemove&#39;, e =&gt; { mx = e.clientX; my = e.clientY; });
+
+class Particle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * W;
+    this.y = Math.random() * H;
+    this.ox = this.x; this.oy = this.y;
+    this.isBright = Math.random() &gt; 0.93;
+    this.size = this.isBright ? Math.random() * 2.5 + 1.5 : Math.random() * 1.2 + 0.2;
+    this.speed = Math.random() * 0.3 + 0.05;
+    this.opacity = this.isBright ? Math.random() * 0.5 + 0.5 : Math.random() * 0.5 + 0.1;
+    this.twinkleSpeed = Math.random() * 0.02 + 0.005;
+    this.twinkleOffset = Math.random() * Math.PI * 2;
+    this.hue = Math.random() &gt; 0.82 ? 185 : 0;
+  }
+  update(t) {
+    // Gentle drift
+    this.x = this.ox + Math.sin(t * this.speed + this.twinkleOffset) * 1.5;
+    this.y = this.oy + Math.cos(t * this.speed * 0.7 + this.twinkleOffset) * 1;
+
+    // Mouse repulsion
+    const dx = this.x - mx;
+    const dy = this.y - my;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist &lt; 120) {
+      const force = (120 - dist) / 120;
+      this.x += dx * force * 0.04;
+      this.y += dy * force * 0.04;
+    }
+
+    // Twinkle
+    this.currentOpacity = this.opacity * (0.6 + 0.4 * Math.sin(t * this.twinkleSpeed * 60 + this.twinkleOffset));
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    if (this.hue === 185) {
+      ctx.fillStyle = `rgba(114,245,255,${this.currentOpacity})`;
+      if (this.isBright) {
+        ctx.shadowBlur = 8; ctx.shadowColor = &#39;#72f5ff&#39;;
+      }
+    } else {
+      ctx.fillStyle = `rgba(255,255,255,${this.currentOpacity})`;
+      if (this.isBright) {
+        ctx.shadowBlur = 6; ctx.shadowColor = &#39;rgba(255,255,255,0.8)&#39;;
+      }
+    }
+    ctx.fill();
+    ctx.shadowBlur = 0;
+  }
+}
+
+for (let i = 0; i &lt; 520; i++) particles.push(new Particle());
+
+let t = 0;
+function drawParticles() {
+  ctx.clearRect(0, 0, W, H);
+  t += 0.01;
+  particles.forEach(p =&gt; { p.update(t); p.draw(); });
+
+  // Draw connections for nearby particles
+  particles.forEach((a, i) =&gt; {
+    particles.slice(i + 1, i + 6).forEach(b =&gt; {
+      const dx = a.x - b.x, dy = a.y - b.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist &lt; 80) {
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.strokeStyle = `rgba(114,245,255,${(1 - dist / 80) * 0.08})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    });
+  });
+
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+// ────────────────────────────── SCROLL PROGRESS ─────────────────────
+const progressBar = document.getElementById(&#39;scroll-progress&#39;);
+window.addEventListener(&#39;scroll&#39;, () =&gt; {
+  const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+  progressBar.style.width = pct + &#39;%&#39;;
+}, { passive: true });
+
+// ────────────────────────────── NAV SCROLL ──────────────────────────
+const navbar = document.getElementById(&#39;navbar&#39;);
+window.addEventListener(&#39;scroll&#39;, () =&gt; {
+  navbar.classList.toggle(&#39;scrolled&#39;, window.scrollY &gt; 60);
+}, { passive: true });
+
+// ────────────────────────────── HERO PARALLAX ───────────────────────
+const heroFast = document.querySelector(&#39;.parallax-fast&#39;);
+const heroSlow = document.querySelector(&#39;.parallax-slow&#39;);
+window.addEventListener(&#39;scroll&#39;, () =&gt; {
+  const sy = window.scrollY;
+  if (heroFast) heroFast.style.transform = `translateY(${sy * 0.12}px)`;
+  if (heroSlow) heroSlow.style.transform = `translateY(${sy * 0.25}px)`;
+}, { passive: true });
+
+// ────────────────────────────── SCROLL REVEAL ───────────────────────
+const reveals = document.querySelectorAll(&#39;[data-reveal]&#39;);
+const revealObs = new IntersectionObserver(entries =&gt; {
+  entries.forEach(e =&gt; {
+    if (e.isIntersecting) {
+      e.target.classList.add(&#39;visible&#39;, &#39;reveal&#39;);
+      if (e.target.classList.contains(&#39;section-heading&#39;)) {
+        e.target.classList.add(&#39;visible&#39;);
+      }
+      revealObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.15 });
+reveals.forEach(el =&gt; {
+  el.classList.add(&#39;reveal&#39;);
+  revealObs.observe(el);
+});
+
+// Stagger children
+const staggers = document.querySelectorAll(&#39;[data-stagger]&#39;);
+const staggerObs = new IntersectionObserver(entries =&gt; {
+  entries.forEach(e =&gt; {
+    if (e.isIntersecting) { e.target.classList.add(&#39;visible&#39;); staggerObs.unobserve(e.target); }
+  });
+}, { threshold: 0.1 });
+staggers.forEach(el =&gt; staggerObs.observe(el));
+
+// Timeline items
+const timelineItems = document.querySelectorAll(&#39;[data-timeline-item]&#39;);
+const tlObs = new IntersectionObserver(entries =&gt; {
+  entries.forEach((e, idx) =&gt; {
+    if (e.isIntersecting) {
+      setTimeout(() =&gt; {
+        e.target.classList.add(&#39;visible&#39;);
+        const dot = e.target.querySelector(&#39;.timeline-dot&#39;);
+        if (dot &amp;&amp; !dot.classList.contains(&#39;active&#39;)) dot.classList.add(&#39;active&#39;);
+      }, idx * 100);
+    }
+  });
+}, { threshold: 0.2 });
+timelineItems.forEach(el =&gt; tlObs.observe(el));
+
+// ────────────────────────────── 3D CARD TILT ────────────────────────
+document.querySelectorAll(&#39;[data-tilt]&#39;).forEach(card =&gt; {
+  card.addEventListener(&#39;mousemove&#39;, e =&gt; {
+    const rect = card.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const dx = (e.clientX - cx) / (rect.width / 2);
+    const dy = (e.clientY - cy) / (rect.height / 2);
+    card.style.transform = `perspective(800px) rotateY(${dx * 8}deg) rotateX(${-dy * 8}deg) scale(1.02)`;
+  });
+  card.addEventListener(&#39;mouseleave&#39;, () =&gt; {
+    card.style.transform = &#39;perspective(800px) rotateY(0deg) rotateX(0deg) scale(1)&#39;;
+    card.style.transition = &#39;transform 0.5s ease&#39;;
+  });
+  card.addEventListener(&#39;mouseenter&#39;, () =&gt; {
+    card.style.transition = &#39;transform 0.1s ease, border-color 0.3s ease, box-shadow 0.3s ease&#39;;
+  });
+});
+
+// ────────────────────────────── PLANET SCROLL BUTTONS ───────────────
+const planetRow = document.getElementById(&#39;planet-row&#39;);
+document.getElementById(&#39;planet-prev&#39;)?.addEventListener(&#39;click&#39;, () =&gt; {
+  planetRow.scrollBy({ left: -286, behavior: &#39;smooth&#39; });
+});
+document.getElementById(&#39;planet-next&#39;)?.addEventListener(&#39;click&#39;, () =&gt; {
+  planetRow.scrollBy({ left: 286, behavior: &#39;smooth&#39; });
+});
+
+// ────────────────────────────── MAGNETIC BUTTONS ────────────────────
+document.querySelectorAll(&#39;[data-magnetic]&#39;).forEach(btn =&gt; {
+  btn.addEventListener(&#39;mousemove&#39;, e =&gt; {
+    const rect = btn.getBoundingClientRect();
+    const dx = e.clientX - (rect.left + rect.width / 2);
+    const dy = e.clientY - (rect.top + rect.height / 2);
+    btn.style.transform = `translate(${dx * 0.25}px, ${dy * 0.25}px)`;
+  });
+  btn.addEventListener(&#39;mouseleave&#39;, () =&gt; {
+    btn.style.transform = &#39;translate(0, 0)&#39;;
+    btn.style.transition = &#39;transform 0.4s ease&#39;;
+  });
+  btn.addEventListener(&#39;mouseenter&#39;, () =&gt; {
+    btn.style.transition = &#39;transform 0.15s ease&#39;;
+  });
+});
+
+// ────────────────────────────── SECTION HEADINGS REVEAL ─────────────
+const headings = document.querySelectorAll(&#39;.section-heading&#39;);
+const headingObs = new IntersectionObserver(entries =&gt; {
+  entries.forEach(e =&gt; {
+    if (e.isIntersecting) {
+      e.target.classList.add(&#39;visible&#39;);
+      headingObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+headings.forEach(h =&gt; headingObs.observe(h));
+    </script>
+    <!-- Sound Toggle FAB -->
+    <button id="sound-toggle" title="Toggle ambient sound" cursor="none">
+      <span id="sound-icon" class="material-symbols-outlined text-primary text-[20px]" style="font-variation-settings:&#39;FILL&#39; 1;">      volume_off
+</span>
+    </button>
+    <script>
+      // ════════════════ THEME TOGGLE ════════════════
+const themeToggle = document.getElementById(&#39;theme-toggle&#39;);
+const themeIcon = document.getElementById(&#39;theme-icon&#39;);
+let isLight = false;
+themeToggle.addEventListener(&#39;click&#39;, () =&gt; {
+  isLight = !isLight;
+  document.documentElement.classList.toggle(&#39;light&#39;, isLight);
+  themeIcon.textContent = isLight ? &#39;dark_mode&#39; : &#39;light_mode&#39;;
+  // Update canvas BG
+  orreryBg = isLight ? &#39;#e8f0f8&#39; : &#39;#06060C&#39;;
+  constBg = isLight ? &#39;#e8f0f8&#39; : &#39;#06060C&#39;;
+  playClick();
+});
+
+// ════════════════ SOUND DESIGN ════════════════
+let audioCtx = null;
+let ambientNode = null, gainNode = null;
+let soundOn = false;
+const soundToggle = document.getElementById(&#39;sound-toggle&#39;);
+const soundIcon = document.getElementById(&#39;sound-icon&#39;);
+
+function initAudio() {
+  if (audioCtx) return;
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  gainNode = audioCtx.createGain();
+  gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+  gainNode.connect(audioCtx.destination);
+
+  // Layered cosmic drone: three detuned oscillators + noise
+  function makeOsc(freq, type, gainVal) {
+    const osc = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.value = freq;
+    g.gain.value = gainVal;
+    osc.connect(g);
+    g.connect(gainNode);
+    osc.start();
+    return osc;
+  }
+  makeOsc(40, &#39;sine&#39;, 0.35);
+  makeOsc(41.2, &#39;sine&#39;, 0.2);
+  makeOsc(80, &#39;triangle&#39;, 0.07);
+  makeOsc(160, &#39;sine&#39;, 0.03);
+
+  // White noise filtered for &#34;wind&#34;
+  const bufSize = audioCtx.sampleRate * 2;
+  const noiseBuffer = audioCtx.createBuffer(1, bufSize, audioCtx.sampleRate);
+  const data = noiseBuffer.getChannelData(0);
+  for (let i = 0; i &lt; bufSize; i++) data[i] = (Math.random() * 2 - 1) * 0.4;
+  const noiseSource = audioCtx.createBufferSource();
+  noiseSource.buffer = noiseBuffer;
+  noiseSource.loop = true;
+  const bpf = audioCtx.createBiquadFilter();
+  bpf.type = &#39;bandpass&#39;;
+  bpf.frequency.value = 180;
+  bpf.Q.value = 0.5;
+  const ng = audioCtx.createGain();
+  ng.gain.value = 0.04;
+  noiseSource.connect(bpf);
+  bpf.connect(ng);
+  ng.connect(gainNode);
+  noiseSource.start();
+}
+
+function playClick() {
+  if (!audioCtx) return;
+  const osc = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(220, audioCtx.currentTime + 0.12);
+  g.gain.setValueAtTime(0.18, audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+  osc.connect(g); g.connect(audioCtx.destination);
+  osc.start(); osc.stop(audioCtx.currentTime + 0.15);
+}
+
+function playHover() {
+  if (!audioCtx || !soundOn) return;
+  const osc = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  osc.frequency.value = 660;
+  g.gain.setValueAtTime(0.04, audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+  osc.connect(g); g.connect(audioCtx.destination);
+  osc.start(); osc.stop(audioCtx.currentTime + 0.08);
+}
+
+soundToggle.addEventListener(&#39;click&#39;, () =&gt; {
+  initAudio();
+  soundOn = !soundOn;
+  soundIcon.textContent = soundOn ? &#39;volume_up&#39; : &#39;volume_off&#39;;
+  gainNode.gain.cancelScheduledValues(audioCtx.currentTime);
+  gainNode.gain.setValueAtTime(gainNode.gain.value, audioCtx.currentTime);
+  gainNode.gain.linearRampToValueAtTime(soundOn ? 0.55 : 0, audioCtx.currentTime + 1.5);
+  playClick();
+});
+
+// Attach hover sounds to interactive elements
+setTimeout(() =&gt; {
+  document.querySelectorAll(&#39;a, button&#39;).forEach(el =&gt; {
+    el.addEventListener(&#39;mouseenter&#39;, playHover);
+  });
+}, 500);
+
+// ════════════════ ORRERY ════════════════
+const orrCvs = document.getElementById(&#39;orrery-canvas&#39;);
+const orrCtx = orrCvs.getContext(&#39;2d&#39;);
+let orrW, orrH, orrBg = &#39;#06060C&#39;;
+
+function resizeOrrery() {
+  orrCvs.width = orrCvs.offsetWidth * window.devicePixelRatio;
+  orrCvs.height = orrCvs.offsetHeight * window.devicePixelRatio;
+  orrW = orrCvs.width; orrH = orrCvs.height;
+  orrCtx.scale(window.devicePixelRatio, window.devicePixelRatio);
+}
+setTimeout(resizeOrrery, 100);
+window.addEventListener(&#39;resize&#39;, resizeOrrery);
+
+const PLANETS = [
+  { name:&#39;Mercury&#39;, color:&#39;#9CA3AF&#39;, r:4,  au:0.387, period:0.241, moons:0,  ringColor:null },
+  { name:&#39;Venus&#39;,   color:&#39;#F5B642&#39;, r:7,  au:0.723, period:0.615, moons:0,  ringColor:null },
+  { name:&#39;Earth&#39;,   color:&#39;#3B82F6&#39;, r:7.5,au:1.000, period:1.000, moons:1,  ringColor:null },
+  { name:&#39;Mars&#39;,    color:&#39;#EF4444&#39;, r:5,  au:1.524, period:1.881, moons:2,  ringColor:null },
+  { name:&#39;Jupiter&#39;, color:&#39;#C97D3B&#39;, r:16, au:2.5,   period:11.86, moons:95, ringColor:null },
+  { name:&#39;Saturn&#39;,  color:&#39;#E8C96B&#39;, r:13, au:3.2,   period:29.46, moons:146,ringColor:&#39;rgba(232,201,107,0.35)&#39; },
+  { name:&#39;Uranus&#39;,  color:&#39;#67E8F9&#39;, r:10, au:3.85,  period:84.01, moons:28, ringColor:null },
+  { name:&#39;Neptune&#39;, color:&#39;#1D4ED8&#39;, r:9,  au:4.45,  period:164.8, moons:16, ringColor:null },
+];
+
+const PLANET_DATA = {
+  Mercury:{ period:&#39;88 days&#39;,   dist:&#39;0.39 AU&#39;, moons:&#39;0&#39;   },
+  Venus:  { period:&#39;225 days&#39;,  dist:&#39;0.72 AU&#39;, moons:&#39;0&#39;   },
+  Earth:  { period:&#39;365 days&#39;,  dist:&#39;1.00 AU&#39;, moons:&#39;1&#39;   },
+  Mars:   { period:&#39;687 days&#39;,  dist:&#39;1.52 AU&#39;, moons:&#39;2&#39;   },
+  Jupiter:{ period:&#39;11.9 yrs&#39;, dist:&#39;5.20 AU&#39;, moons:&#39;95&#39;  },
+  Saturn: { period:&#39;29.5 yrs&#39;, dist:&#39;9.58 AU&#39;, moons:&#39;146&#39; },
+  Uranus: { period:&#39;84.0 yrs&#39;, dist:&#39;19.2 AU&#39;, moons:&#39;28&#39;  },
+  Neptune:{ period:&#39;164.8 yrs&#39;,dist:&#39;30.1 AU&#39;, moons:&#39;16&#39;  },
+};
+
+let orrSpeed = 1;
+let orrTime = 0;
+let selectedPlanet = null;
+const speedLabel = document.getElementById(&#39;orrery-speed-label&#39;);
+
+document.getElementById(&#39;orrery-speed-up&#39;).addEventListener(&#39;click&#39;, () =&gt; {
+  orrSpeed = Math.min(orrSpeed * 2, 64);
+  speedLabel.textContent = `SPEED: ${orrSpeed}×`;
+  playClick();
+});
+document.getElementById(&#39;orrery-speed-down&#39;).addEventListener(&#39;click&#39;, () =&gt; {
+  orrSpeed = Math.max(orrSpeed / 2, 0.25);
+  speedLabel.textContent = `SPEED: ${orrSpeed}×`;
+  playClick();
+});
+document.getElementById(&#39;orrery-speed-reset&#39;).addEventListener(&#39;click&#39;, () =&gt; {
+  orrSpeed = 1; speedLabel.textContent = &#39;SPEED: 1×&#39;;
+  playClick();
+});
+
+function getOrrSize() {
+  const cw = orrCvs.offsetWidth;
+  return Math.min(cw / 2 - 20, 420);
+}
+
+// Planet click detection
+orrCvs.addEventListener(&#39;click&#39;, e =&gt; {
+  const rect = orrCvs.getBoundingClientRect();
+  const cx = orrCvs.offsetWidth / 2;
+  const cy = orrCvs.offsetHeight / 2;
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+  const scale = getOrrSize() / 4.6;
+
+  let hit = null;
+  PLANETS.forEach(p =&gt; {
+    const angle = (orrTime / p.period) * Math.PI * 2;
+    const px = cx + p.au * scale * Math.cos(angle);
+    const py = cy + p.au * scale * Math.sin(angle) * 0.4;
+    const dist = Math.hypot(mx - px, my - py);
+    if (dist &lt; p.r + 8) hit = p;
+  });
+
+  const panel = document.getElementById(&#39;planet-info-panel&#39;);
+  if (hit) {
+    selectedPlanet = hit.name;
+    document.getElementById(&#39;pip-name&#39;).textContent = hit.name.toUpperCase();
+    document.getElementById(&#39;pip-label&#39;).textContent = &#39;// SELECTED BODY&#39;;
+    const d = PLANET_DATA[hit.name];
+    document.getElementById(&#39;pip-period&#39;).textContent = d.period;
+    document.getElementById(&#39;pip-dist&#39;).textContent = d.dist;
+    document.getElementById(&#39;pip-moons&#39;).textContent = d.moons;
+    panel.classList.remove(&#39;hidden&#39;);
+    playClick();
+  } else {
+    selectedPlanet = null;
+    panel.classList.add(&#39;hidden&#39;);
+  }
+});
+
+function drawOrrery() {
+  const logicalW = orrCvs.offsetWidth;
+  const logicalH = orrCvs.offsetHeight;
+  orrCtx.clearRect(0, 0, logicalW * devicePixelRatio, logicalH * devicePixelRatio);
+
+  const cx = logicalW / 2;
+  const cy = logicalH / 2;
+  const scale = getOrrSize() / 4.6;
+  const lt = isLight;
+
+  orrCtx.save();
+  orrCtx.scale(devicePixelRatio, devicePixelRatio);
+
+  // BG
+  orrCtx.fillStyle = lt ? &#39;#e8f0f8&#39; : &#39;#06060C&#39;;
+  orrCtx.fillRect(0, 0, logicalW, logicalH);
+
+  // Stars behind orrery
+  if (!lt) {
+    for (let i = 0; i &lt; 80; i++) {
+      const sx = (Math.sin(i * 137.5) * 0.5 + 0.5) * logicalW;
+      const sy = (Math.cos(i * 97.3) * 0.5 + 0.5) * logicalH;
+      const ss = Math.random() &gt; 0.97 ? 1.2 : 0.5;
+      orrCtx.beginPath();
+      orrCtx.arc(sx, sy, ss, 0, Math.PI*2);
+      orrCtx.fillStyle = `rgba(255,255,255,${0.15 + (i % 5) * 0.06})`;
+      orrCtx.fill();
+    }
+  }
+
+  // Orbit rings
+  PLANETS.forEach((p, i) =&gt; {
+    const rx = p.au * scale;
+    const ry = rx * 0.4;
+    orrCtx.beginPath();
+    orrCtx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+    orrCtx.strokeStyle = selectedPlanet === p.name
+      ? `rgba(114,245,255,0.35)` 
+      : lt ? `rgba(0,80,120,0.12)` : `rgba(255,255,255,0.06)`;
+    orrCtx.lineWidth = selectedPlanet === p.name ? 1.5 : 0.7;
+    orrCtx.setLineDash([4, 6]);
+    orrCtx.stroke();
+    orrCtx.setLineDash([]);
+  });
+
+  // Sun
+  const sunGrad = orrCtx.createRadialGradient(cx, cy, 0, cx, cy, 22);
+  sunGrad.addColorStop(0, &#39;#fff7b0&#39;);
+  sunGrad.addColorStop(0.5, &#39;#FFD700&#39;);
+  sunGrad.addColorStop(1, &#39;rgba(255,140,0,0)&#39;);
+  orrCtx.beginPath();
+  orrCtx.arc(cx, cy, 14, 0, Math.PI * 2);
+  orrCtx.fillStyle = sunGrad;
+  orrCtx.shadowBlur = 40;
+  orrCtx.shadowColor = &#39;#FFD700&#39;;
+  orrCtx.fill();
+  orrCtx.shadowBlur = 0;
+
+  // Planets
+  PLANETS.forEach(p =&gt; {
+    const angle = (orrTime / p.period) * Math.PI * 2;
+    const px = cx + p.au * scale * Math.cos(angle);
+    const py = cy + p.au * scale * Math.sin(angle) * 0.4;
+
+    // Saturn ring
+    if (p.ringColor) {
+      orrCtx.beginPath();
+      orrCtx.ellipse(px, py, p.r * 2.4, p.r * 0.7, -0.2, 0, Math.PI * 2);
+      orrCtx.strokeStyle = p.ringColor;
+      orrCtx.lineWidth = 3;
+      orrCtx.stroke();
+    }
+
+    // Planet glow
+    const glow = orrCtx.createRadialGradient(px, py, 0, px, py, p.r * 2.5);
+    glow.addColorStop(0, p.color + &#39;aa&#39;);
+    glow.addColorStop(1, &#39;transparent&#39;);
+    orrCtx.beginPath();
+    orrCtx.arc(px, py, p.r * 2.5, 0, Math.PI * 2);
+    orrCtx.fillStyle = glow;
+    orrCtx.fill();
+
+    // Planet body
+    const bodyGrad = orrCtx.createRadialGradient(px - p.r*0.3, py - p.r*0.3, 0, px, py, p.r);
+    bodyGrad.addColorStop(0, &#39;#ffffff55&#39;);
+    bodyGrad.addColorStop(0.4, p.color);
+    bodyGrad.addColorStop(1, p.color + &#39;99&#39;);
+    orrCtx.beginPath();
+    orrCtx.arc(px, py, p.r, 0, Math.PI * 2);
+    orrCtx.fillStyle = bodyGrad;
+    if (selectedPlanet === p.name) {
+      orrCtx.shadowBlur = 20; orrCtx.shadowColor = &#39;#72f5ff&#39;;
+    }
+    orrCtx.fill();
+    orrCtx.shadowBlur = 0;
+
+    // Selected ring indicator
+    if (selectedPlanet === p.name) {
+      orrCtx.beginPath();
+      orrCtx.arc(px, py, p.r + 5, 0, Math.PI * 2);
+      orrCtx.strokeStyle = &#39;rgba(114,245,255,0.7)&#39;;
+      orrCtx.lineWidth = 1;
+      orrCtx.stroke();
+    }
+
+    // Label
+    orrCtx.font = `${10 / devicePixelRatio + 9}px &#34;Share Tech Mono&#34;, monospace`;
+    orrCtx.fillStyle = lt ? &#39;rgba(0,60,90,0.6)&#39; : &#39;rgba(114,245,255,0.45)&#39;;
+    orrCtx.fillText(p.name.toUpperCase(), px + p.r + 4, py - p.r - 4);
+  });
+
+  orrCtx.restore();
+  orrTime += 0.0004 * orrSpeed;
+  requestAnimationFrame(drawOrrery);
+}
+drawOrrery();
+
+// ════════════════ CONSTELLATION VIEWER ════════════════
+const constCvs = document.getElementById(&#39;constellation-canvas&#39;);
+const constCtx = constCvs.getContext(&#39;2d&#39;);
+let constW, constH, constBg = &#39;#06060C&#39;;
+
+function resizeConst() {
+  constCvs.width = constCvs.offsetWidth * window.devicePixelRatio;
+  constCvs.height = constCvs.offsetHeight * window.devicePixelRatio;
+  constW = constCvs.width; constH = constCvs.height;
+}
+setTimeout(resizeConst, 150);
+window.addEventListener(&#39;resize&#39;, resizeConst);
+
+const CONSTELLATIONS = {
+  Orion: {
+    stars: [
+      {x:0.48,y:0.22,name:&#39;Betelgeuse&#39;,mag:1.0,color:&#39;#ff8060&#39;},
+      {x:0.56,y:0.18,name:&#39;Bellatrix&#39;, mag:1.6,color:&#39;#a0c0ff&#39;},
+      {x:0.50,y:0.50,name:&#39;Alnilam&#39;,   mag:1.7,color:&#39;#d0e0ff&#39;},
+      {x:0.45,y:0.50,name:&#39;Alnitak&#39;,   mag:1.8,color:&#39;#d0e0ff&#39;},
+      {x:0.55,y:0.50,name:&#39;Mintaka&#39;,   mag:2.2,color:&#39;#c0d0ff&#39;},
+      {x:0.40,y:0.72,name:&#39;Rigel&#39;,     mag:0.1,color:&#39;#b0d0ff&#39;},
+      {x:0.60,y:0.78,name:&#39;Saiph&#39;,     mag:2.1,color:&#39;#c0d0ff&#39;},
+      {x:0.44,y:0.35,name:&#39;Meissa&#39;,    mag:3.4,color:&#39;#ffffff&#39;},
+    ],
+    lines:[[0,4],[0,1],[1,5],[5,2],[2,3],[3,4],[4,6],[5,6],[0,7],[1,7]]
+  },
+  Scorpius: {
+    stars: [
+      {x:0.50,y:0.20,name:&#39;Antares&#39;,  mag:1.0,color:&#39;#ff6040&#39;},
+      {x:0.40,y:0.15,name:&#39;Graffias&#39;, mag:2.6,color:&#39;#c0c0ff&#39;},
+      {x:0.35,y:0.30,name:&#39;Dschubba&#39;, mag:2.3,color:&#39;#d0d0ff&#39;},
+      {x:0.42,y:0.35,name:&#39;Acrab&#39;,    mag:2.6,color:&#39;#c0c0ff&#39;},
+      {x:0.58,y:0.30,name:&#39;Tau Sco&#39;,  mag:2.8,color:&#39;#d0d0ff&#39;},
+      {x:0.55,y:0.50,name:&#39;Alniyat&#39;,  mag:2.9,color:&#39;#e0e0ff&#39;},
+      {x:0.45,y:0.60,name:&#39;Shaula&#39;,   mag:1.6,color:&#39;#ffe0c0&#39;},
+      {x:0.40,y:0.70,name:&#39;Lesath&#39;,   mag:2.7,color:&#39;#e0e0ff&#39;},
+      {x:0.60,y:0.75,name:&#39;Sargas&#39;,   mag:1.8,color:&#39;#ffe0c0&#39;},
+    ],
+    lines:[[0,1],[0,2],[0,3],[0,4],[0,5],[5,6],[6,7],[6,8]]
+  },
+  Ursa_Major: {
+    stars: [
+      {x:0.20,y:0.30,name:&#39;Dubhe&#39;,     mag:1.8,color:&#39;#ffe0c0&#39;},
+      {x:0.30,y:0.35,name:&#39;Merak&#39;,     mag:2.4,color:&#39;#d0e0ff&#39;},
+      {x:0.42,y:0.40,name:&#39;Phecda&#39;,    mag:2.4,color:&#39;#d0d0ff&#39;},
+      {x:0.38,y:0.50,name:&#39;Megrez&#39;,    mag:3.3,color:&#39;#e0e0ff&#39;},
+      {x:0.50,y:0.42,name:&#39;Alioth&#39;,    mag:1.8,color:&#39;#d0e0ff&#39;},
+      {x:0.62,y:0.38,name:&#39;Mizar&#39;,     mag:2.3,color:&#39;#d0d0ff&#39;},
+      {x:0.75,y:0.32,name:&#39;Alkaid&#39;,    mag:1.9,color:&#39;#b0d0ff&#39;},
+    ],
+    lines:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6]]
+  },
+  Leo: {
+    stars: [
+      {x:0.25,y:0.40,name:&#39;Regulus&#39;,  mag:1.4,color:&#39;#b0d0ff&#39;},
+      {x:0.32,y:0.28,name:&#39;Eta Leo&#39;,  mag:3.5,color:&#39;#e0e0ff&#39;},
+      {x:0.42,y:0.22,name:&#39;Algieba&#39;,  mag:2.0,color:&#39;#ffe0c0&#39;},
+      {x:0.50,y:0.18,name:&#39;Zeta Leo&#39;, mag:3.4,color:&#39;#e0e0ff&#39;},
+      {x:0.58,y:0.25,name:&#39;Mu Leo&#39;,   mag:3.9,color:&#39;#e0e0e0&#39;},
+      {x:0.65,y:0.45,name:&#39;Denebola&#39;, mag:2.1,color:&#39;#c0e0ff&#39;},
+      {x:0.55,y:0.55,name:&#39;Chort&#39;,    mag:3.3,color:&#39;#e0e0ff&#39;},
+      {x:0.45,y:0.58,name:&#39;Zosma&#39;,    mag:2.6,color:&#39;#d0d0ff&#39;},
+    ],
+    lines:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,0]]
+  },
+  Cassiopeia: {
+    stars: [
+      {x:0.20,y:0.55,name:&#39;Caph&#39;,    mag:2.3,color:&#39;#d0e0ff&#39;},
+      {x:0.35,y:0.35,name:&#39;Schedar&#39;, mag:2.2,color:&#39;#ffe0c0&#39;},
+      {x:0.50,y:0.52,name:&#39;Gamma Cas&#39;,mag:2.5,color:&#39;#d0d0ff&#39;},
+      {x:0.65,y:0.38,name:&#39;Ruchbah&#39;, mag:2.7,color:&#39;#d0e0ff&#39;},
+      {x:0.80,y:0.55,name:&#39;Segin&#39;,   mag:3.4,color:&#39;#e0e0ff&#39;},
+    ],
+    lines:[[0,1],[1,2],[2,3],[3,4]]
+  },
+};
+
+const constNames = Object.keys(CONSTELLATIONS);
+let currentConst = &#39;Orion&#39;;
+let hoveredStar = null;
+let constOffset = { x: 0, y: 0 };
+let constDragStart = null;
+
+// Navigation buttons
+const constNav = document.getElementById(&#39;const-nav&#39;);
+constNames.forEach(name =&gt; {
+  const btn = document.createElement(&#39;button&#39;);
+  btn.textContent = name.replace(&#39;_&#39;,&#39; &#39;);
+  btn.className = `text-mono text-[0.6rem] px-3 py-1.5 border transition-all const-nav-btn`;
+  btn.style.cssText = &#39;border-radius:2px; letter-spacing:0.1em;&#39;;
+  btn.dataset.const = name;
+  if (name === currentConst) {
+    btn.style.borderColor = &#39;rgba(114,245,255,0.5)&#39;;
+    btn.style.color = &#39;#72f5ff&#39;;
+  } else {
+    btn.style.borderColor = &#39;rgba(255,255,255,0.12)&#39;;
+    btn.style.color = &#39;rgba(186,201,203,0.7)&#39;;
+  }
+  btn.addEventListener(&#39;click&#39;, () =&gt; {
+    currentConst = name;
+    constOffset = { x: 0, y: 0 };
+    document.querySelectorAll(&#39;.const-nav-btn&#39;).forEach(b =&gt; {
+      if (b.dataset.const === name) {
+        b.style.borderColor = &#39;rgba(114,245,255,0.5)&#39;;
+        b.style.color = &#39;#72f5ff&#39;;
+      } else {
+        b.style.borderColor = &#39;rgba(255,255,255,0.12)&#39;;
+        b.style.color = &#39;rgba(186,201,203,0.7)&#39;;
+      }
+    });
+    playClick();
+  });
+  constNav.appendChild(btn);
+});
+
+// Mouse hover on constellation
+constCvs.addEventListener(&#39;mousemove&#39;, e =&gt; {
+  const rect = constCvs.getBoundingClientRect();
+  const mx = (e.clientX - rect.left) / rect.width;
+  const my = (e.clientY - rect.top) / rect.height;
+  const c = CONSTELLATIONS[currentConst];
+  hoveredStar = null;
+  c.stars.forEach(s =&gt; {
+    const sx = s.x + constOffset.x;
+    const sy = s.y + constOffset.y;
+    if (Math.hypot(mx - sx, my - sy) &lt; 0.04) hoveredStar = s;
+  });
+  const info = document.getElementById(&#39;const-info&#39;);
+  if (hoveredStar) {
+    info.textContent = `★ ${hoveredStar.name.toUpperCase()} — MAG: ${hoveredStar.mag}`;
+    info.style.color = &#39;#72f5ff&#39;;
+  } else {
+    info.textContent = &#39;HOVER A STAR FOR DATA&#39;;
+    info.style.color = &#39;rgba(114,245,255,0.4)&#39;;
+  }
+});
+
+let constAnimT = 0;
+function drawConstellation() {
+  const cw = constCvs.offsetWidth;
+  const ch = constCvs.offsetHeight;
+  const dpr = window.devicePixelRatio;
+  constCtx.clearRect(0, 0, cw * dpr, ch * dpr);
+  constCtx.save();
+  constCtx.scale(dpr, dpr);
+
+  // Background
+  constCtx.fillStyle = isLight ? &#39;#e8f0f8&#39; : &#39;#06060C&#39;;
+  constCtx.fillRect(0, 0, cw, ch);
+
+  // Background stars (random but seeded)
+  for (let i = 0; i &lt; 150; i++) {
+    const bx = (Math.sin(i * 331.7) * 0.5 + 0.5) * cw;
+    const by = (Math.cos(i * 173.3) * 0.5 + 0.5) * ch;
+    const bs = i % 11 === 0 ? 1.0 : 0.4;
+    const ba = 0.08 + (i % 7) * 0.02 + Math.sin(constAnimT * 0.5 + i) * 0.03;
+    constCtx.beginPath();
+    constCtx.arc(bx, by, bs, 0, Math.PI * 2);
+    constCtx.fillStyle = isLight ? `rgba(0,60,100,${ba * 0.5})` : `rgba(255,255,255,${ba})`;
+    constCtx.fill();
+  }
+
+  const c = CONSTELLATIONS[currentConst];
+
+  // Constellation lines
+  c.lines.forEach(([a, b]) =&gt; {
+    const sa = c.stars[a], sb = c.stars[b];
+    const ax = (sa.x + constOffset.x) * cw;
+    const ay = (sa.y + constOffset.y) * ch;
+    const bx2 = (sb.x + constOffset.x) * cw;
+    const by2 = (sb.y + constOffset.y) * ch;
+
+    const grad = constCtx.createLinearGradient(ax, ay, bx2, by2);
+    grad.addColorStop(0, isLight ? &#39;rgba(0,100,150,0.3)&#39; : &#39;rgba(114,245,255,0.25)&#39;);
+    grad.addColorStop(1, isLight ? &#39;rgba(0,100,150,0.1)&#39; : &#39;rgba(114,245,255,0.08)&#39;);
+
+    constCtx.beginPath();
+    constCtx.moveTo(ax, ay);
+    constCtx.lineTo(bx2, by2);
+    constCtx.strokeStyle = grad;
+    constCtx.lineWidth = 1;
+    constCtx.setLineDash([4, 8]);
+    constCtx.stroke();
+    constCtx.setLineDash([]);
+  });
+
+  // Stars
+  c.stars.forEach(s =&gt; {
+    const sx = (s.x + constOffset.x) * cw;
+    const sy = (s.y + constOffset.y) * ch;
+    const baseR = (3 - s.mag * 0.8 + 2.5);
+    const r = Math.max(1.5, baseR) + Math.sin(constAnimT * 1.5 + s.x * 10) * 0.4;
+    const isHovered = hoveredStar === s;
+
+    // Glow
+    const gGrad = constCtx.createRadialGradient(sx, sy, 0, sx, sy, r * 4);
+    gGrad.addColorStop(0, s.color + (isHovered ? &#39;cc&#39; : &#39;44&#39;));
+    gGrad.addColorStop(1, &#39;transparent&#39;);
+    constCtx.beginPath();
+    constCtx.arc(sx, sy, r * 4, 0, Math.PI * 2);
+    constCtx.fillStyle = gGrad;
+    constCtx.fill();
+
+    // Core
+    constCtx.beginPath();
+    constCtx.arc(sx, sy, isHovered ? r * 1.6 : r, 0, Math.PI * 2);
+    constCtx.fillStyle = isHovered ? &#39;#ffffff&#39; : s.color;
+    if (isHovered) { constCtx.shadowBlur = 20; constCtx.shadowColor = &#39;#72f5ff&#39;; }
+    constCtx.fill();
+    constCtx.shadowBlur = 0;
+
+    // Hovered star: crosshair + name
+    if (isHovered) {
+      constCtx.strokeStyle = &#39;rgba(114,245,255,0.7)&#39;;
+      constCtx.lineWidth = 0.8;
+      constCtx.beginPath(); constCtx.moveTo(sx - 14, sy); constCtx.lineTo(sx + 14, sy); constCtx.stroke();
+      constCtx.beginPath(); constCtx.moveTo(sx, sy - 14); constCtx.lineTo(sx, sy + 14); constCtx.stroke();
+    }
+  });
+
+  // Constellation name watermark
+  constCtx.font = `bold ${Math.min(cw * 0.06, 52)}px &#34;Orbitron&#34;, sans-serif`;
+  constCtx.fillStyle = isLight ? &#39;rgba(0,80,120,0.06)&#39; : &#39;rgba(114,245,255,0.04)&#39;;
+  constCtx.textAlign = &#39;center&#39;;
+  constCtx.fillText(currentConst.replace(&#39;_&#39;,&#39; &#39;).toUpperCase(), cw / 2, ch / 2 + 20);
+  constCtx.textAlign = &#39;left&#39;;
+
+  constCtx.restore();
+  constAnimT += 0.01;
+  requestAnimationFrame(drawConstellation);
+}
+drawConstellation();
+    </script>
+    <script>
+      // ════════════════ LIVE ISS TRACKER ════════════════
+async function fetchISS() {
+  try {
+    const res = await fetch(&#39;https://api.wheretheiss.at/v1/satellites/25544&#39;);
+    const data = await res.json();
+
+    const lat = data.latitude;
+    const lon = data.longitude;
+    const alt = data.altitude.toFixed(1);
+    const vel = Math.round(data.velocity).toString();
+
+    document.getElementById(&#39;iss-lat&#39;).textContent =
+      Math.abs(lat).toFixed(3) + (lat &gt;= 0 ? &#39; N&#39; : &#39; S&#39;);
+    document.getElementById(&#39;iss-lon&#39;).textContent =
+      Math.abs(lon).toFixed(3) + (lon &gt;= 0 ? &#39; E&#39; : &#39; W&#39;);
+    document.getElementById(&#39;iss-alt&#39;).textContent = alt + &#39; km&#39;;
+    document.getElementById(&#39;iss-vel&#39;).textContent =
+      Number(vel).toLocaleString() + &#39; km/h&#39;;
+
+    const xPct = ((lon + 180) / 360) * 100;
+    const yPct = ((90 - lat) / 180) * 100;
+    const dot = document.getElementById(&#39;iss-dot&#39;);
+    if (dot) { dot.style.left = xPct + &#39;%&#39;; dot.style.top = yPct + &#39;%&#39;; }
+  } catch (err) {
+    console.warn(&#39;ISS fetch failed:&#39;, err);
+  }
+}
+fetchISS();
+setInterval(fetchISS, 5000);
+    </script>
+    <script>
+      // ════════════════ NASA APOD ════════════════
+const NASA_API_KEY = &#39;mWaXDqJDyPx0cibn1dvM3eDGGk9MWhiRVIQJNc1i&#39;; // ← replace this
+
+async function fetchAPOD() {   // ← empty brackets, nothing inside ()
+  try {
+    const res = await fetch(
+      `https://api.nasa.gov/planetary/apod?api_key=${NASA_API_KEY}`
+    );
+    const data = await res.json();
+
+    // Update title
+    const titleEl = document.getElementById(&#39;apod-title&#39;);
+    if (titleEl) titleEl.textContent = data.title;
+
+    // Update image
+    const imgEl = document.getElementById(&#39;apod-img&#39;);
+    if (imgEl &amp;&amp; data.media_type === &#39;image&#39;) {
+      imgEl.src = data.url;
+      imgEl.alt = data.title;
+    }
+
+    // Update link
+    const linkEl = document.getElementById(&#39;apod-link&#39;);
+    if (linkEl) linkEl.href = data.hdurl || data.url;
+
+    // Update date  ← this goes HERE, inside the {} not the ()
+    const dateEl = document.getElementById(&#39;apod-date&#39;);
+    if (dateEl) dateEl.textContent = &#39;— &#39; + data.date;
+
+  } catch (err) {
+    console.warn(&#39;APOD fetch failed:&#39;, err);
+  }
+}
+
+fetchAPOD();
+    </script>
+  </body>
+</html>
